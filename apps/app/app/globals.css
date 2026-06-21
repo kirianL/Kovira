@@ -1378,23 +1378,31 @@ h3 {
   gap: 12px !important;
   cursor: pointer;
   position: relative;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.canvas-field:hover {
+.canvas-field:hover:not(.dragging) {
   border-color: var(--color-chalk) !important;
   box-shadow: var(--shadow-subtle-4) !important;
   transform: translateY(-1.5px);
 }
 
-.canvas-field.selected {
+.canvas-field.selected:not(.dragging) {
   border-color: var(--color-slate) !important;
   box-shadow: var(--shadow-subtle-4) !important;
   transform: translateY(-1.5px);
 }
 
-.canvas-field:active {
+.canvas-field:active:not(.dragging) {
   transform: translateY(-0.5px) scale(0.99);
+}
+
+.canvas-field.dragging {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  border-color: var(--color-ink) !important;
+  border-style: dashed !important;
+  z-index: 9999 !important;
+  transition: none !important;
 }
 
 .canvas-field-header-row {

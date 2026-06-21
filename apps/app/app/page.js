@@ -96,15 +96,16 @@ function SortableField({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition,
     opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 9999 : undefined,
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`canvas-field ${selectedFieldId === field.id ? "selected" : ""}`}
+      className={`canvas-field ${selectedFieldId === field.id ? "selected" : ""} ${isDragging ? "dragging" : ""}`}
       onClick={() => setSelectedFieldId(field.id)}
     >
       <div className="canvas-field-header-row">
