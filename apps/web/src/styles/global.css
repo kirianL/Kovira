@@ -273,3 +273,10 @@ body.login-active #login-right {
   transform: translateY(-2px);
   box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 50px -12px;
 }
+
+/* Prevent auto-zoom on iOS inputs */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
