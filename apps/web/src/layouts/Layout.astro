@@ -70,14 +70,14 @@ const { title, activeTab } = Astro.props;
       <a href="/analytics" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'analytics' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Analytics</a>
     </div>
 
-    <div transition:name="footer" transition:animate="none" class="w-full flex flex-col items-center gap-2 pb-8 z-5 relative max-[768px]:pb-3">
-      <div class="text-[11px] text-white/30 tracking-wider text-center max-[768px]:mt-2">
+    <div transition:name="footer" transition:animate="none" class="w-full flex flex-col items-center gap-1.5 pb-6 z-5 relative max-[768px]:pb-3">
+      <div class="text-[11px] text-white/35 tracking-wider text-center max-[768px]:mt-2">
         <span>© 2026 Kovira. All rights reserved.</span>
         <a href="/app" class="mx-2 transition-colors duration-200 hover:text-white/60">Platform</a>
         <a href="/app?tab=settings" class="mx-2 transition-colors duration-200 hover:text-white/60">API Keys</a>
         <a href="/app?tab=settings" class="mx-2 transition-colors duration-200 hover:text-white/60">Security</a>
       </div>
-      <div class="text-[11px] text-white/20 tracking-wide text-center">Developed by Kirian with <span class="text-white/30">♥</span></div>
+      <div class="text-[11px] text-white/40 tracking-wide text-center">Developed by Kirian with <span class="text-white/50">♥</span></div>
     </div>
   </div>
 
