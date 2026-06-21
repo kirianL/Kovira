@@ -42,6 +42,37 @@
   --shadow-subtle-2: rgba(0, 0, 0, 0.02) 0px 1px 2px 0px;
   --shadow-subtle-3: inset 0 1px 0px 0px rgba(255, 255, 255, 0.16), 0 1px 2px 0px rgba(0, 0, 0, 0.05);
   --shadow-xl: rgba(0, 0, 0, 0.1) 0px 25px 50px -12px;
+
+  /* Backwards compatibility mappings for older inline styles */
+  --bg-canvas: var(--color-pure-paper);
+  --bg-app: var(--color-pure-paper);
+  --bg-surface: var(--color-pure-paper);
+  --bg-surface-raised: var(--color-soft-mist);
+  --bg-surface-sunken: #fafafa;
+  --bg-inset-active: var(--color-soft-mist);
+  --bg-icon-active: var(--color-ink);
+
+  --border-hairline: var(--color-soft-mist);
+  --border-soft: var(--color-soft-mist);
+  --border-strong: var(--color-slate);
+  --border-bevel-top: rgba(255, 255, 255, 0.16);
+
+  --text-primary: var(--color-ink);
+  --text-secondary: var(--color-ash);
+  --text-tertiary: var(--color-slate);
+  --text-disabled: var(--color-fog);
+
+  --accent: var(--color-ink);
+
+  --radius-app: 0px;
+  --radius-lg: var(--radius-largepanels);
+  --radius-md: var(--radius-cards);
+  --radius-sm: var(--radius-images);
+  --radius-xs: var(--radius-inputs);
+
+  --shadow-card: var(--shadow-subtle);
+  --shadow-inset: none;
+  --shadow-pop: var(--shadow-xl);
 }
 
 html, body {

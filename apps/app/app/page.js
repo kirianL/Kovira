@@ -1,34 +1,40 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import * as Lucide from "lucide-react";
 
-// Notion/Linear style Icon loader using Tabler Icons CDN (loaded in layout.js)
-function Icon({ name, className = "", style = {} }) {
+// Notion/Linear style Icon loader using Lucide React
+function Icon({ name, className = "", style = {}, size = 14 }) {
   const mapping = {
-    dashboard: "ti-layout-dashboard",
-    form: "ti-forms",
-    inbox: "ti-database",
-    flow: "ti-git-branch",
-    "chart-pie": "ti-chart-pie",
-    cog: "ti-settings",
-    "chevron-right": "ti-chevron-right",
-    "new-window-page": "ti-external-link",
-    bell: "ti-bell",
-    plus: "ti-plus"
+    dashboard: Lucide.LayoutDashboard,
+    form: Lucide.FileText,
+    inbox: Lucide.Inbox,
+    flow: Lucide.GitBranch,
+    "chart-pie": Lucide.BarChart3,
+    cog: Lucide.Settings,
+    "chevron-right": Lucide.ChevronRight,
+    "new-window-page": Lucide.ExternalLink,
+    bell: Lucide.Bell,
+    plus: Lucide.Plus,
+    trash: Lucide.Trash2,
+    copy: Lucide.Copy,
+    x: Lucide.X,
+    "arrow-up": Lucide.ArrowUp,
+    "arrow-down": Lucide.ArrowDown
   };
-  const iconClass = mapping[name] || `ti-${name}`;
+
+  const LucideIcon = mapping[name] || Lucide.HelpCircle;
   return (
-    <i 
-      className={`ti ${iconClass} ${className}`} 
+    <LucideIcon 
+      className={className} 
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         verticalAlign: 'middle',
-        fontSize: '14px',
-        lineHeight: '1',
-        width: '14px',
-        height: '14px',
+        strokeWidth: 1.5,
+        width: `${size}px`,
+        height: `${size}px`,
         ...style
       }}
     />
