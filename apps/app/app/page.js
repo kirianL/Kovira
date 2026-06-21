@@ -2,6 +2,23 @@
 
 import { useState, useEffect, useMemo } from "react";
 import * as Lucide from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 // Notion/Linear style Icon loader using Lucide React
 function Icon({ name, className = "", style = {}, size = 14 }) {
@@ -31,7 +48,13 @@ function Icon({ name, className = "", style = {}, size = 14 }) {
     "date-icon": Lucide.Calendar,
     "file-icon": Lucide.UploadCloud,
     "grip-vertical": Lucide.GripVertical,
-    eye: Lucide.Eye
+    eye: Lucide.Eye,
+    "arrow-left": Lucide.ArrowLeft,
+    "arrow-right": Lucide.ArrowRight,
+    check: Lucide.Check,
+    "corner-down-left": Lucide.CornerDownLeft,
+    "chevron-down": Lucide.ChevronDown,
+    "alert-circle": Lucide.AlertCircle
   };
 
   const LucideIcon = mapping[name] || Lucide.HelpCircle;
@@ -52,12 +75,157 @@ function Icon({ name, className = "", style = {}, size = 14 }) {
   );
 }
 
+function SortableField({
+  field,
+  idx,
+  selectedFieldId,
+  setSelectedFieldId,
+  activeForm,
+  duplicateField,
+  deleteField,
+  moveField
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: field.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`canvas-field ${selectedFieldId === field.id ? "selected" : ""}`}
+      onClick={() => setSelectedFieldId(field.id)}
+    >
+      <div className="canvas-field-header-row">
+        <div 
+          className="canvas-field-drag" 
+          style={{ cursor: "grab", display: "flex", alignItems: "center", touchAction: "none" }}
+          {...attributes}
+          {...listeners}
+        >
+          <Icon name="grip-vertical" size={14} style={{ color: "var(--color-fog)" }} />
+        </div>
+        
+        <div className="canvas-field-title-wrap">
+          <span className="canvas-field-type-tag">
+            <Icon name={`${field.type}-icon`} size={10} style={{ marginRight: 4 }} />
+            {field.type === "text" ? "Texto" : field.type === "select" ? "Desplegable" : field.type}
+          </span>
+          <span className="canvas-field-label" style={{ fontWeight: 600, fontSize: 13, color: "var(--color-ink)" }}>
+            {field.label || `Campo ${field.type}`}
+            {field.required && <span className="canvas-field-required">*</span>}
+          </span>
+        </div>
+
+        <div className="canvas-field-actions">
+          <button className="btn-field-action" title="Mover Arriba" onClick={(e) => { e.stopPropagation(); moveField(idx, -1); }} disabled={idx === 0}>
+            <Icon name="arrow-up" size={12} />
+          </button>
+          <button className="btn-field-action" title="Mover Abajo" onClick={(e) => { e.stopPropagation(); moveField(idx, 1); }} disabled={idx === activeForm.fields.length - 1}>
+            <Icon name="arrow-down" size={12} />
+          </button>
+          <button className="btn-field-action" title="Duplicar" onClick={(e) => { e.stopPropagation(); duplicateField(field); }}>
+            <Icon name="copy" size={12} />
+          </button>
+          <button className="btn-field-action" title="Eliminar" style={{ color: "#ef4444" }} onClick={(e) => { e.stopPropagation(); deleteField(field.id); }}>
+            <Icon name="trash" size={12} />
+          </button>
+        </div>
+      </div>
+
+      <div className="canvas-field-mockup-wrapper">
+        {field.type === "text" && (
+          <div className="mock-input">
+            {field.placeholder || "Texto de respuesta corta..."}
+          </div>
+        )}
+        {field.type === "email" && (
+          <div className="mock-input">
+            <Icon name="email-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
+            {field.placeholder || "correo@ejemplo.com"}
+          </div>
+        )}
+        {field.type === "number" && (
+          <div className="mock-input">
+            <Icon name="number-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
+            {field.placeholder || "Número..."}
+          </div>
+        )}
+        {field.type === "date" && (
+          <div className="mock-input">
+            <Icon name="date-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
+            {field.placeholder || "dd/mm/aaaa"}
+          </div>
+        )}
+        {field.type === "select" && (
+          <div className="mock-select-dropdown">
+            <span>{field.placeholder || "Selecciona una opción..."}</span>
+            <Icon name="chevron-down" size={12} style={{ color: "var(--color-slate)" }} />
+          </div>
+        )}
+        {field.type === "radio" && (
+          <div className="mock-options-list">
+            {(field.options && field.options.length > 0 ? field.options : ["Opción 1", "Opción 2"]).map((opt, oIdx) => (
+              <div key={oIdx} className="mock-option-item">
+                <div className="mock-radio-dot" />
+                <span>{opt}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {field.type === "checkbox" && (
+          <div className="mock-options-list">
+            {(field.options && field.options.length > 0 ? field.options : ["Opción 1", "Opción 2"]).map((opt, oIdx) => (
+              <div key={oIdx} className="mock-option-item">
+                <div className="mock-checkbox-box" />
+                <span>{opt}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {field.type === "file" && (
+          <div className="mock-file-upload-zone">
+            <Icon name="file-icon" size={16} style={{ color: "var(--color-slate)" }} />
+            <span>{field.placeholder || "Subir archivo (máx. 10MB)"}</span>
+          </div>
+        )}
+      </div>
+
+      {field.condition && field.condition.fieldId && (
+        <div className="condition-badge" style={{ alignSelf: "flex-start" }}>
+          <Icon name="flow" size={10} style={{ marginRight: 4 }} />
+          <span>Mostrar si target es "{field.condition.equalsValue}"</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SaaSApp() {
   // Navigation & Workspace State
   const [activeTab, setActiveTab] = useState("dashboard");
   const [activeWorkspace, setActiveWorkspace] = useState("personal");
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [mobileBuilderTab, setMobileBuilderTab] = useState("canvas");
+
+  const handleSelectField = (fieldId) => {
+    setSelectedFieldId(fieldId);
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+      setMobileBuilderTab("properties");
+    }
+  };
 
   // Workspace Database State
   const [forms, setForms] = useState([]);
@@ -80,6 +248,9 @@ export default function SaaSApp() {
   const [previewAnswers, setPreviewAnswers] = useState({});
   const [previewError, setPreviewError] = useState("");
   const [showThankYou, setShowThankYou] = useState(false);
+  const [currentStepIdx, setCurrentStepIdx] = useState(0);
+  const [stepError, setStepError] = useState(false);
+  const [isSelectDropdownOpen, setIsSelectDropdownOpen] = useState(false);
   
   // Create / Input Form States
   const [newKeyName, setNewKeyName] = useState("");
@@ -98,6 +269,47 @@ export default function SaaSApp() {
   // Selected Workflow Focus
   const [selectedWorkflowId, setSelectedWorkflowId] = useState("");
   const [activeLogId, setActiveLogId] = useState(null);
+
+  // Drag & Drop sensors configuration
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!active || !over || active.id === over.id) return;
+
+    if (!activeForm) return;
+    const oldIndex = activeForm.fields.findIndex(f => f.id === active.id);
+    const newIndex = activeForm.fields.findIndex(f => f.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+    
+    const fieldsCopy = arrayMove(activeForm.fields, oldIndex, newIndex);
+
+    const updatedForms = forms.map(f => {
+      if (f.id === activeForm.id) {
+        return { ...f, fields: fieldsCopy };
+      }
+      return f;
+    });
+
+    setForms(updatedForms);
+    saveToLocalStorage("forms", updatedForms);
+  };
 
   // 1. Initial mounting check to avoid hydration issues
   useEffect(() => {
@@ -477,6 +689,9 @@ export default function SaaSApp() {
     setForms(updatedForms);
     saveToLocalStorage("forms", updatedForms);
     setSelectedFieldId(newField.id);
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+      setMobileBuilderTab("properties");
+    }
   };
 
   const updateFieldProperty = (fieldId, property, value) => {
@@ -608,11 +823,79 @@ export default function SaaSApp() {
     setPreviewAnswers(initialAnswers);
     setPreviewError("");
     setShowThankYou(false);
+    setCurrentStepIdx(0);
+    setStepError(false);
+    setIsSelectDropdownOpen(false);
     setIsPreviewOpen(true);
   };
 
+  const getVisibleFields = () => {
+    if (!activeForm || !activeForm.fields) return [];
+    return activeForm.fields.filter(field => checkFieldCondition(field));
+  };
+
+  const validateCurrentStep = (field) => {
+    if (!field) return true;
+    if (field.required) {
+      const val = previewAnswers[field.label];
+      if (val === undefined || val === null || val === "" || (Array.isArray(val) && val.length === 0)) {
+        return false;
+      }
+    }
+    if (field.type === "email") {
+      const val = previewAnswers[field.label];
+      if (val && !val.includes("@")) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleNextStep = () => {
+    const visibleFields = getVisibleFields();
+    const currentField = visibleFields[currentStepIdx];
+    if (!validateCurrentStep(currentField)) {
+      setStepError(true);
+      return;
+    }
+    setStepError(false);
+    setIsSelectDropdownOpen(false);
+    if (currentStepIdx < visibleFields.length - 1) {
+      setCurrentStepIdx(prev => prev + 1);
+    } else {
+      // Last step: trigger submit
+      handlePreviewSubmit();
+    }
+  };
+
+  const handlePrevStep = () => {
+    setStepError(false);
+    setIsSelectDropdownOpen(false);
+    if (currentStepIdx > 0) {
+      setCurrentStepIdx(prev => prev - 1);
+    }
+  };
+
+  // Keyboard navigation for Typeform step flow
+  useEffect(() => {
+    if (!isPreviewOpen || showThankYou) return;
+    const handleGlobalKeyDown = (e) => {
+      // Ignore if typing in a textarea
+      if (e.target.tagName === "TEXTAREA") return;
+      
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleNextStep();
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
+    };
+  }, [isPreviewOpen, currentStepIdx, previewAnswers, showThankYou, activeForm]);
+
   const handlePreviewSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setPreviewError("");
 
     // Validate required fields (only if visible)
@@ -1325,9 +1608,9 @@ export default function SaaSApp() {
             ) : (
               <div>
                 {/* Header selectors */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-secondary)" }}>Formulario:</span>
+                <div className="builder-header-row">
+                  <div className="builder-header-left">
+                    <span className="builder-header-label" style={{ fontSize: 13, fontWeight: 700, color: "var(--text-secondary)" }}>Formulario:</span>
                     <select 
                       className="filter-select"
                       value={selectedFormId || ""}
@@ -1335,31 +1618,59 @@ export default function SaaSApp() {
                         setSelectedFormId(e.target.value);
                         setSelectedFieldId(null);
                       }}
-                      style={{ fontSize: 14, fontWeight: 600 }}
+                      style={{ fontSize: 13, fontWeight: 600 }}
                     >
                       {forms.map(f => (
                         <option key={f.id} value={f.id}>{f.name}</option>
                       ))}
                     </select>
-                    <button className="btn btn-secondary" style={{ padding: "6px 12px", fontSize: 12 }} onClick={createNewForm}>
-                      <i className="ti ti-plus" /> Nuevo
+                    <button className="btn btn-secondary" style={{ padding: "6px 10px", fontSize: 12 }} onClick={createNewForm} title="Nuevo Formulario">
+                      <Icon name="plus" size={12} /> <span className="hide-on-mobile">Nuevo</span>
                     </button>
                   </div>
-                  <div style={{ display: "flex", gap: 10 }}>
+                  <div className="builder-header-right">
                     <button className="btn btn-secondary" onClick={openFormPreview} style={{ background: "#4338ca", color: "#FFF" }}>
-                      <i className="ti ti-player-play" /> Probar Formulario
+                      <Icon name="eye" size={12} style={{ color: "#FFF", marginRight: 4 }} /> <span>Probar Formulario</span>
                     </button>
-                    <button className="btn btn-secondary btn-danger" onClick={deleteCurrentForm}>
-                      <i className="ti ti-trash" /> Eliminar Formulario
+                    <button className="btn btn-secondary btn-danger" onClick={deleteCurrentForm} title="Eliminar Formulario">
+                      <Icon name="trash" size={12} style={{ marginRight: 4 }} /> <span className="hide-on-mobile">Eliminar</span>
                     </button>
                   </div>
+                </div>
+
+                {/* Mobile Builder Tab Segmented Control */}
+                <div className="builder-mobile-tabs">
+                  <button 
+                    className={`btn ${mobileBuilderTab === "canvas" ? "btn-primary" : "btn-secondary"}`} 
+                    style={{ flex: 1, padding: "8px 0", fontSize: "12px", borderRadius: 4 }}
+                    onClick={() => setMobileBuilderTab("canvas")}
+                  >
+                    <Lucide.LayoutDashboard size={13} style={{ marginRight: 6 }} /> Lienzo
+                  </button>
+                  <button 
+                    className={`btn ${mobileBuilderTab === "elements" ? "btn-primary" : "btn-secondary"}`} 
+                    style={{ flex: 1, padding: "8px 0", fontSize: "12px", borderRadius: 4 }}
+                    onClick={() => setMobileBuilderTab("elements")}
+                  >
+                    <Lucide.Plus size={13} style={{ marginRight: 6 }} /> Elementos
+                  </button>
+                  <button 
+                    className={`btn ${mobileBuilderTab === "properties" ? "btn-primary" : "btn-secondary"}`} 
+                    style={{ flex: 1, padding: "8px 0", fontSize: "12px", borderRadius: 4, position: "relative" }}
+                    onClick={() => setMobileBuilderTab("properties")}
+                  >
+                    <Lucide.SlidersHorizontal size={13} style={{ marginRight: 6 }} /> Propiedades
+                    {selectedFieldId && (
+                      <span style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", width: 6, height: 6, borderRadius: "50%", background: "#ef4444" }} />
+                    )}
+                  </button>
                 </div>
 
                 {/* 3-Panel Layout (03-ui-architecture.md) */}
                 <div className="builder-layout">
                   
                   {/* Left panel: components list */}
-                  <div className="builder-panel">
+                  <div className={`builder-panel ${mobileBuilderTab === "elements" ? "mobile-visible" : "mobile-hidden"}`}>
                     <div className="builder-panel-title">Elementos</div>
                     <div className="builder-sub" style={{ fontSize: 11.5, margin: "0 0 10px 0" }}>Haz clic en un componente para agregarlo al formulario:</div>
                     <div className="field-chip-list">
@@ -1382,7 +1693,7 @@ export default function SaaSApp() {
                   </div>
 
                   {/* Center panel: builder canvas */}
-                  <div className="builder-canvas">
+                  <div className={`builder-canvas ${mobileBuilderTab === "canvas" ? "mobile-visible" : "mobile-hidden"}`}>
                     <div style={{ background: "var(--bg-surface)", border: "1px solid var(--border-soft)", borderRadius: "var(--radius-md)", padding: "16px 20px", marginBottom: 12 }}>
                       <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "var(--text-tertiary)" }}>Título del Formulario</label>
                       <input 
@@ -1398,110 +1709,23 @@ export default function SaaSApp() {
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                       {activeForm.fields.map((field, idx) => (
-                        <div 
-                          key={field.id} 
-                          className={`canvas-field ${selectedFieldId === field.id ? "selected" : ""}`}
-                          onClick={() => setSelectedFieldId(field.id)}
-                        >
-                          <div className="canvas-field-header-row">
-                            <div className="canvas-field-drag" style={{ cursor: "grab", display: "flex", alignItems: "center" }}>
-                              <Icon name="grip-vertical" size={14} style={{ color: "var(--color-fog)" }} />
-                            </div>
-                            
-                            <div className="canvas-field-title-wrap">
-                              <span className="canvas-field-type-tag">
-                                <Icon name={`${field.type}-icon`} size={10} style={{ marginRight: 4 }} />
-                                {field.type === "text" ? "Texto" : field.type === "select" ? "Desplegable" : field.type}
-                              </span>
-                              <span className="canvas-field-label" style={{ fontWeight: 600, fontSize: 13, color: "var(--color-ink)" }}>
-                                {field.label || `Campo ${field.type}`}
-                                {field.required && <span className="canvas-field-required">*</span>}
-                              </span>
-                            </div>
-
-                            <div className="canvas-field-actions">
-                              <button className="btn-field-action" title="Mover Arriba" onClick={(e) => { e.stopPropagation(); moveField(idx, -1); }} disabled={idx === 0}>
-                                <Icon name="arrow-up" size={12} />
-                              </button>
-                              <button className="btn-field-action" title="Mover Abajo" onClick={(e) => { e.stopPropagation(); moveField(idx, 1); }} disabled={idx === activeForm.fields.length - 1}>
-                                <Icon name="arrow-down" size={12} />
-                              </button>
-                              <button className="btn-field-action" title="Duplicar" onClick={(e) => { e.stopPropagation(); duplicateField(field); }}>
-                                <Icon name="copy" size={12} />
-                              </button>
-                              <button className="btn-field-action" title="Eliminar" style={{ color: "#ef4444" }} onClick={(e) => { e.stopPropagation(); deleteField(field.id); }}>
-                                <Icon name="trash" size={12} />
-                              </button>
-                            </div>
-                          </div>
-
-                          <div className="canvas-field-mockup-wrapper">
-                            {field.type === "text" && (
-                              <div className="mock-input">
-                                {field.placeholder || "Texto de respuesta corta..."}
-                              </div>
-                            )}
-                            {field.type === "email" && (
-                              <div className="mock-input">
-                                <Icon name="email-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
-                                {field.placeholder || "correo@ejemplo.com"}
-                              </div>
-                            )}
-                            {field.type === "number" && (
-                              <div className="mock-input">
-                                <Icon name="number-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
-                                {field.placeholder || "Número..."}
-                              </div>
-                            )}
-                            {field.type === "date" && (
-                              <div className="mock-input">
-                                <Icon name="date-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
-                                {field.placeholder || "dd/mm/aaaa"}
-                              </div>
-                            )}
-                            {field.type === "select" && (
-                              <div className="mock-select-dropdown">
-                                <span>{field.placeholder || "Selecciona una opción..."}</span>
-                                <Icon name="chevron-down" size={12} style={{ color: "var(--color-slate)" }} />
-                              </div>
-                            )}
-                            {field.type === "radio" && (
-                              <div className="mock-options-list">
-                                {(field.options && field.options.length > 0 ? field.options : ["Opción 1", "Opción 2"]).map((opt, oIdx) => (
-                                  <div key={oIdx} className="mock-option-item">
-                                    <div className="mock-radio-dot" />
-                                    <span>{opt}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {field.type === "checkbox" && (
-                              <div className="mock-options-list">
-                                {(field.options && field.options.length > 0 ? field.options : ["Opción 1", "Opción 2"]).map((opt, oIdx) => (
-                                  <div key={oIdx} className="mock-option-item">
-                                    <div className="mock-checkbox-box" />
-                                    <span>{opt}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {field.type === "file" && (
-                              <div className="mock-file-upload-zone">
-                                <Icon name="file-icon" size={16} style={{ color: "var(--color-slate)" }} />
-                                <span>{field.placeholder || "Subir archivo (máx. 10MB)"}</span>
-                              </div>
-                            )}
-                          </div>
-
-                          {field.condition && field.condition.fieldId && (
-                            <div className="condition-badge" style={{ alignSelf: "flex-start" }}>
-                              <Icon name="flow" size={10} style={{ marginRight: 4 }} />
-                              <span>Mostrar si target es "{field.condition.equalsValue}"</span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                        <SortableContext items={activeForm.fields.map(f => f.id)} strategy={verticalListSortingStrategy}>
+                          {activeForm.fields.map((field, idx) => (
+                            <SortableField
+                              key={field.id}
+                              field={field}
+                              idx={idx}
+                              selectedFieldId={selectedFieldId}
+                              setSelectedFieldId={handleSelectField}
+                              activeForm={activeForm}
+                              duplicateField={duplicateField}
+                              deleteField={deleteField}
+                              moveField={moveField}
+                            />
+                          ))}
+                        </SortableContext>
+                      </DndContext>
 
                       {activeForm.fields.length === 0 && (
                         <div style={{ textAlign: "center", padding: "40px 20px", color: "var(--text-tertiary)", fontSize: 13 }}>
@@ -1565,17 +1789,24 @@ export default function SaaSApp() {
                   </div>
 
                   {/* Right panel: properties */}
-                  <div className="builder-panel">
-                    <div className="builder-panel-title">Propiedades</div>
+                  <div className={`builder-panel ${mobileBuilderTab === "properties" ? "mobile-visible" : "mobile-hidden"}`}>
+                    <div className="builder-panel-title" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <Lucide.Settings size={14} style={{ color: "var(--color-slate)" }} />
+                      <span>Propiedades</span>
+                    </div>
                     {selectedFieldId ? (
                       (() => {
                         const field = activeForm.fields.find(f => f.id === selectedFieldId);
-                        if (!field) return <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>Campo no encontrado.</div>;
+                        if (!field) return <div style={{ fontSize: 13, color: "var(--text-tertiary)", padding: 12 }}>Campo no encontrado.</div>;
                         return (
-                          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                             <div className="form-group">
-                              <label>Etiqueta / Pregunta</label>
+                              <label htmlFor={`prop-label-${field.id}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "var(--color-slate)" }}>
+                                <Lucide.Type size={13} style={{ color: "var(--color-ash)" }} />
+                                <span>Etiqueta / Pregunta</span>
+                              </label>
                               <input 
+                                id={`prop-label-${field.id}`}
                                 type="text" 
                                 className="form-input" 
                                 value={field.label} 
@@ -1585,8 +1816,12 @@ export default function SaaSApp() {
 
                             {field.type !== "select" && field.type !== "radio" && field.type !== "checkbox" && (
                               <div className="form-group">
-                                <label>Marcador de posición (Placeholder)</label>
+                                <label htmlFor={`prop-placeholder-${field.id}`} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "var(--color-slate)" }}>
+                                  <Lucide.AlignLeft size={13} style={{ color: "var(--color-ash)" }} />
+                                  <span>Marcador de posición</span>
+                                </label>
                                 <input 
+                                  id={`prop-placeholder-${field.id}`}
                                   type="text" 
                                   className="form-input" 
                                   value={field.placeholder || ""} 
@@ -1596,23 +1831,39 @@ export default function SaaSApp() {
                             )}
 
                             <div className="form-group">
-                              <label className="option-label">
+                              <label className="option-label" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-surface-sunken)", padding: "10px 12px", borderRadius: 6, border: "1px solid var(--border-soft)", width: "100%", margin: 0, cursor: "pointer" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                  <Lucide.Asterisk size={14} style={{ color: field.required ? "#ef4444" : "var(--color-ash)" }} />
+                                  <span style={{ fontSize: 13, fontWeight: 500, color: "var(--color-ink)" }}>Respuesta Obligatoria</span>
+                                </div>
                                 <input 
                                   type="checkbox" 
                                   checked={field.required || false} 
                                   onChange={(e) => updateFieldProperty(field.id, "required", e.target.checked)} 
+                                  style={{ width: 16, height: 16, accentColor: "var(--color-ink)", cursor: "pointer" }}
                                 />
-                                Campo Requerido
                               </label>
                             </div>
 
                             {/* Options builder for radio, select, checkbox */}
                             {(field.type === "select" || field.type === "radio" || field.type === "checkbox") && (
                               <div className="form-group">
-                                <label>Opciones de respuesta</label>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 4 }}>
+                                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "var(--color-slate)" }}>
+                                  <Lucide.List size={13} style={{ color: "var(--color-ash)" }} />
+                                  <span>Opciones de respuesta</span>
+                                </label>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
                                   {(field.options || []).map((opt, oIdx) => (
-                                    <div key={oIdx} style={{ display: "flex", gap: 6 }}>
+                                    <div key={oIdx} style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                      {field.type === "radio" && (
+                                        <div style={{ width: 6, height: 6, borderRadius: "50%", border: "1.5px solid var(--color-ash)", flexShrink: 0 }} />
+                                      )}
+                                      {field.type === "checkbox" && (
+                                        <div style={{ width: 6, height: 6, borderRadius: "1.5px", border: "1.5px solid var(--color-ash)", flexShrink: 0 }} />
+                                      )}
+                                      {field.type === "select" && (
+                                        <Lucide.ChevronDown size={12} style={{ color: "var(--color-ash)", flexShrink: 0 }} />
+                                      )}
                                       <input 
                                         type="text" 
                                         className="form-input" 
@@ -1626,43 +1877,49 @@ export default function SaaSApp() {
                                       />
                                       <button 
                                         className="btn-field-action" 
-                                        style={{ color: "#ef4444" }}
+                                        style={{ color: "#ef4444", flexShrink: 0 }}
                                         onClick={() => {
                                           const opts = field.options.filter((_, idx) => idx !== oIdx);
                                           updateFieldProperty(field.id, "options", opts);
                                         }}
                                         disabled={(field.options || []).length <= 1}
                                       >
-                                        <i className="ti ti-x" />
+                                        <Lucide.X size={14} />
                                       </button>
                                     </div>
                                   ))}
                                   <button 
                                     className="btn btn-secondary" 
-                                    style={{ padding: "6px", fontSize: 11, justifyContent: "center" }}
+                                    style={{ padding: "6px 10px", fontSize: 11, justifyContent: "center", display: "flex", alignItems: "center", gap: 4 }}
                                     onClick={() => {
                                       const opts = [...(field.options || []), `Nueva opción ${(field.options || []).length + 1}`];
                                       updateFieldProperty(field.id, "options", opts);
                                     }}
                                   >
-                                    + Agregar opción
+                                    <Lucide.Plus size={12} /> Agregar opción
                                   </button>
                                 </div>
                               </div>
                             )}
 
-                            <div className="sidebar-divider" style={{ margin: "10px -16px" }} />
+                            <div className="sidebar-divider" style={{ margin: "6px -16px" }} />
                             
                             {/* Conditional Visibility */}
                             <div className="form-group">
-                              <label style={{ fontSize: 12, fontWeight: 700 }}>Lógica de Visibilidad</label>
-                              <label className="option-label" style={{ fontSize: 12.5, margin: "6px 0" }}>
+                              <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "var(--color-ink)" }}>
+                                <Lucide.GitBranch size={13} style={{ color: "var(--color-ash)" }} />
+                                <span>Lógica de Visibilidad</span>
+                              </label>
+                              <label className="option-label" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-surface-sunken)", padding: "10px 12px", borderRadius: 6, border: "1px solid var(--border-soft)", width: "100%", margin: "6px 0 0 0", cursor: "pointer" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                  <Lucide.Eye size={14} style={{ color: !!field.condition ? "var(--color-ink)" : "var(--color-ash)" }} />
+                                  <span style={{ fontSize: 13, fontWeight: 500, color: "var(--color-ink)" }}>Mostrar condicionalmente</span>
+                                </div>
                                 <input 
                                   type="checkbox" 
                                   checked={!!field.condition} 
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      // Find another field to link to
                                       const other = activeForm.fields.find(f => f.id !== field.id && (f.type === "select" || f.type === "radio" || f.type === "text"));
                                       updateFieldProperty(field.id, "condition", {
                                         fieldId: other ? other.id : "",
@@ -1672,38 +1929,63 @@ export default function SaaSApp() {
                                       updateFieldProperty(field.id, "condition", null);
                                     }
                                   }} 
+                                  style={{ width: 16, height: 16, accentColor: "var(--color-ink)", cursor: "pointer" }}
                                 />
-                                Aplicar regla condicional
                               </label>
 
                               {field.condition && (
-                                <div style={{ display: "flex", flexDirection: "column", gap: 8, background: "var(--bg-surface-sunken)", padding: 10, borderRadius: 6, border: "1px solid var(--border-soft)", marginTop: 6 }}>
-                                  <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>Mostrar este campo si:</span>
-                                  <select
-                                    className="form-select"
-                                    style={{ padding: 6, fontSize: 12 }}
-                                    value={field.condition.fieldId}
-                                    onChange={(e) => {
-                                      const targetF = activeForm.fields.find(f => f.id === e.target.value);
-                                      updateFieldProperty(field.id, "condition", {
-                                        fieldId: e.target.value,
-                                        equalsValue: targetF && targetF.options ? targetF.options[0] : "Valor"
-                                      });
-                                    }}
-                                  >
-                                    <option value="">Selecciona campo...</option>
-                                    {activeForm.fields.filter(f => f.id !== field.id).map(f => (
-                                      <option key={f.id} value={f.id}>{f.label || f.type}</option>
-                                    ))}
-                                  </select>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 10, background: "var(--bg-surface-sunken)", padding: 12, borderRadius: 6, border: "1px solid var(--border-soft)", marginTop: 8 }}>
+                                  <span style={{ fontSize: 11, color: "var(--text-secondary)", fontWeight: 500 }}>Mostrar este campo si:</span>
                                   
-                                  {(() => {
-                                    const targetF = activeForm.fields.find(f => f.id === field.condition.fieldId);
-                                    if (targetF && (targetF.type === "select" || targetF.type === "radio")) {
+                                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    <span style={{ fontSize: 10.5, color: "var(--color-ash)", fontWeight: 600, textTransform: "uppercase" }}>Campo origen</span>
+                                    <select
+                                      className="form-select"
+                                      style={{ padding: "6px 28px 6px 10px", fontSize: 12 }}
+                                      value={field.condition.fieldId}
+                                      onChange={(e) => {
+                                        const targetF = activeForm.fields.find(f => f.id === e.target.value);
+                                        updateFieldProperty(field.id, "condition", {
+                                          fieldId: e.target.value,
+                                          equalsValue: targetF && targetF.options ? targetF.options[0] : "Valor"
+                                        });
+                                      }}
+                                    >
+                                      <option value="">Selecciona campo...</option>
+                                      {activeForm.fields.filter(f => f.id !== field.id).map(f => (
+                                        <option key={f.id} value={f.id}>{f.label || f.type}</option>
+                                      ))}
+                                    </select>
+                                  </div>
+
+                                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    <span style={{ fontSize: 10.5, color: "var(--color-ash)", fontWeight: 600, textTransform: "uppercase" }}>Es igual a</span>
+                                    {(() => {
+                                      const targetF = activeForm.fields.find(f => f.id === field.condition.fieldId);
+                                      if (targetF && (targetF.type === "select" || targetF.type === "radio")) {
+                                        return (
+                                          <select
+                                            className="form-select"
+                                            style={{ padding: "6px 28px 6px 10px", fontSize: 12 }}
+                                            value={field.condition.equalsValue}
+                                            onChange={(e) => {
+                                              updateFieldProperty(field.id, "condition", {
+                                                ...field.condition,
+                                                equalsValue: e.target.value
+                                              });
+                                            }}
+                                          >
+                                            {(targetF.options || []).map(opt => (
+                                              <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                          </select>
+                                        );
+                                      }
                                       return (
-                                        <select
-                                          className="form-select"
-                                          style={{ padding: 6, fontSize: 12 }}
+                                        <input 
+                                          type="text" 
+                                          className="form-input" 
+                                          style={{ padding: "6px 10px", fontSize: 12 }}
                                           value={field.condition.equalsValue}
                                           onChange={(e) => {
                                             updateFieldProperty(field.id, "condition", {
@@ -1711,28 +1993,10 @@ export default function SaaSApp() {
                                               equalsValue: e.target.value
                                             });
                                           }}
-                                        >
-                                          {(targetF.options || []).map(opt => (
-                                            <option key={opt} value={opt}>{opt}</option>
-                                          ))}
-                                        </select>
+                                        />
                                       );
-                                    }
-                                    return (
-                                      <input 
-                                        type="text" 
-                                        className="form-input" 
-                                        style={{ padding: "6px 8px", fontSize: 12 }}
-                                        value={field.condition.equalsValue}
-                                        onChange={(e) => {
-                                          updateFieldProperty(field.id, "condition", {
-                                            ...field.condition,
-                                            equalsValue: e.target.value
-                                          });
-                                        }}
-                                      />
-                                    );
-                                  })()}
+                                    })()}
+                                  </div>
                                 </div>
                               )}
                             </div>
@@ -1741,7 +2005,8 @@ export default function SaaSApp() {
                       })()
                     ) : (
                       <div style={{ textAlign: "center", padding: "40px 10px", color: "var(--text-tertiary)", fontSize: 12.5 }}>
-                        Selecciona un campo en el lienzo para ver y editar sus atributos.
+                        <Lucide.Sliders size={20} style={{ color: "var(--color-fog)", marginBottom: 8 }} />
+                        <div>Selecciona un campo en el lienzo para ver y editar sus atributos.</div>
                       </div>
                     )}
                   </div>
@@ -2464,176 +2729,357 @@ export default function SaaSApp() {
           MODAL: FORM PREVIEW / SIMULATOR
           ============================================================ */}
       {isPreviewOpen && activeForm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <div>
-                <h4 style={{ fontWeight: 700 }}>Simulador: {activeForm.name}</h4>
-                <span style={{ fontSize: 11, color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>Tema: {activeForm.theme || "Predeterminado"}</span>
+        <div className="preview-overlay-fullscreen">
+          {/* Header */}
+          <div className="preview-typeform-header">
+            <div className="preview-typeform-header-title">
+              <div className="preview-header-logo" style={{ color: 'var(--color-ink)', display: 'flex', alignItems: 'center' }}>
+                <svg style={{ height: '22px', width: 'auto' }} viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M22.2782 6.3584C23.3828 6.3584 24.2782 7.25383 24.2782 8.3584V15.4716C24.3202 15.4824 24.3621 15.4936 24.4038 15.5052L28.96 7.61365L30.3071 8.39141C31.2636 8.94371 31.5914 10.1669 31.0391 11.1235L27.4822 17.2841C27.5129 17.3142 27.5433 17.3446 27.5734 17.3752L35.4668 12.818L36.2446 14.1652C36.7969 15.1218 36.4691 16.3449 35.5125 16.8972L29.3536 20.4531C29.3654 20.4956 29.3768 20.5382 29.3878 20.5811H38.5V22.1366C38.5 23.2412 37.6046 24.1366 36.5 24.1366H29.3878C29.377 24.1787 29.3658 24.2207 29.3542 24.2625L37.2446 28.818L36.4668 30.1652C35.9145 31.1218 34.6913 31.4495 33.7347 30.8973L27.5748 27.3409C27.5446 27.3717 27.5141 27.4022 27.4833 27.4324L32.0401 35.325L30.6931 36.1028C29.7365 36.6551 28.5133 36.3273 27.961 35.3708L24.4052 29.212C24.363 29.2237 24.3207 29.235 24.2782 29.2459V38.3584H22.7227C21.6181 38.3584 20.7227 37.463 20.7227 36.3584V29.2458C20.6802 29.2349 20.6379 29.2235 20.5958 29.2119L16.0392 37.1042L14.692 36.3264C13.7354 35.7742 13.4077 34.551 13.96 33.5944L17.5178 27.432C17.4868 27.4016 17.456 27.3708 17.4256 27.3398L9.53168 31.8973L8.75387 30.55C8.2016 29.5934 8.52936 28.3703 9.48594 27.818L15.6469 24.261C15.6355 24.2197 15.6244 24.1782 15.6137 24.1366H6.5V22.5811C6.5 21.4765 7.39543 20.5811 8.5 20.5811H15.6137C15.6246 20.5388 15.6358 20.4966 15.6475 20.4546L7.75391 15.8972L8.53169 14.5501C9.08397 13.5935 10.3071 13.2657 11.2637 13.818L17.427 17.3763C17.4573 17.3455 17.4879 17.3148 17.5188 17.2845L12.9609 9.39008L14.3081 8.61231C15.2647 8.06002 16.4879 8.38777 17.0401 9.34436L20.5972 15.5053C20.6388 15.4938 20.6807 15.4826 20.7227 15.4718V6.3584H22.2782ZM25.647 24.0166L25.5129 24.2489C25.2237 24.7087 24.8322 25.0977 24.3703 25.3838L24.1802 25.4935C23.6947 25.7542 23.1416 25.9053 22.554 25.914H22.4475C20.5083 25.8855 18.9452 24.3047 18.9452 22.3588C18.9452 20.3951 20.537 18.8032 22.5008 18.8032C23.1125 18.8032 23.6882 18.9577 24.1909 19.2298L24.3599 19.3274C24.8366 19.6204 25.239 20.0227 25.532 20.4994L25.6299 20.669C25.8909 21.1513 26.0436 21.7007 26.0556 22.2847V22.4329C26.0439 23.0041 25.8975 23.5421 25.647 24.0166Z" fill="currentColor"/>
+                </svg>
               </div>
-              <button className="btn-field-action" onClick={() => setIsPreviewOpen(false)}>
-                <Icon name="x" size={16} />
-              </button>
+              <div style={{ width: '1px', height: '16px', background: 'var(--color-soft-mist)', margin: '0 8px' }}></div>
+              <span className="preview-badge-live">VISTA PREVIA</span>
+              <h4 style={{ fontWeight: 600, margin: 0, fontSize: "14px", letterSpacing: "-0.02em" }}>{activeForm.name}</h4>
             </div>
-            
-            <div className="modal-body">
-              {!showThankYou ? (
-                <form onSubmit={handlePreviewSubmit} className="preview-form">
-                  
-                  {previewError && (
-                    <div style={{ background: "#fee2e2", border: "1px solid #fecaca", color: "#dc2626", padding: 10, borderRadius: 4, fontSize: 12.5, fontWeight: 600 }}>
-                      {previewError}
-                    </div>
-                  )}
+            <button className="preview-close-btn" onClick={() => setIsPreviewOpen(false)} title="Salir de vista previa">
+              <span style={{ fontSize: "13px", fontWeight: 500, marginRight: "4px" }}>Cerrar</span>
+              <Icon name="x" size={14} />
+            </button>
+          </div>
 
-                  {activeForm.fields.map((field) => {
-                    const isVisible = checkFieldCondition(field);
-                    if (!isVisible) return null;
-
+          {/* Centered Body */}
+          <div className="preview-typeform-container">
+            {!showThankYou ? (
+              <div className="preview-typeform-content-card">
+                {(() => {
+                  const visibleFields = getVisibleFields();
+                  if (visibleFields.length === 0) {
                     return (
-                      <div key={field.id} className="form-group">
-                        <label>
-                          {field.label}
-                          {field.required && <span style={{ color: "#ef4444", marginLeft: 2 }}>*</span>}
-                        </label>
-
-                        {field.type === "text" && (
-                          <input 
-                            type="text" 
-                            className="form-input" 
-                            placeholder={field.placeholder} 
-                            required={field.required}
-                            value={previewAnswers[field.label] || ""}
-                            onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.label]: e.target.value })}
-                          />
-                        )}
-
-                        {field.type === "email" && (
-                          <input 
-                            type="email" 
-                            className="form-input" 
-                            placeholder={field.placeholder} 
-                            required={field.required}
-                            value={previewAnswers[field.label] || ""}
-                            onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.label]: e.target.value })}
-                          />
-                        )}
-
-                        {field.type === "number" && (
-                          <input 
-                            type="number" 
-                            className="form-input" 
-                            placeholder={field.placeholder} 
-                            required={field.required}
-                            value={previewAnswers[field.label] || ""}
-                            onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.label]: e.target.value })}
-                          />
-                        )}
-
-                        {field.type === "select" && (
-                          <select 
-                            className="form-select" 
-                            required={field.required}
-                            value={previewAnswers[field.label] || ""}
-                            onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.label]: e.target.value })}
-                          >
-                            <option value="">Selecciona una opción...</option>
-                            {(field.options || []).map(opt => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                        )}
-
-                        {field.type === "radio" && (
-                          <div className="option-group">
-                            {(field.options || []).map((opt) => (
-                              <label key={opt} className="option-label">
-                                <input 
-                                  type="radio" 
-                                  name={field.id} 
-                                  value={opt}
-                                  checked={previewAnswers[field.label] === opt}
-                                  onChange={() => setPreviewAnswers({ ...previewAnswers, [field.label]: opt })}
-                                />
-                                {opt}
-                              </label>
-                            ))}
-                          </div>
-                        )}
-
-                        {field.type === "checkbox" && (
-                          <div className="option-group">
-                            {(field.options || []).map((opt) => (
-                              <label key={opt} className="option-label">
-                                <input 
-                                  type="checkbox" 
-                                  value={opt}
-                                  checked={Array.isArray(previewAnswers[field.label]) && previewAnswers[field.label].includes(opt)}
-                                  onChange={(e) => {
-                                    const currentList = Array.isArray(previewAnswers[field.label]) ? previewAnswers[field.label] : [];
-                                    const nextList = e.target.checked 
-                                      ? [...currentList, opt] 
-                                      : currentList.filter(v => v !== opt);
-                                    setPreviewAnswers({ ...previewAnswers, [field.label]: nextList });
-                                  }}
-                                />
-                                {opt}
-                              </label>
-                            ))}
-                          </div>
-                        )}
-
-                        {field.type === "date" && (
-                          <input 
-                            type="date" 
-                            className="form-input" 
-                            required={field.required}
-                            value={previewAnswers[field.label] || ""}
-                            onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.label]: e.target.value })}
-                          />
-                        )}
-
-                        {field.type === "file" && (
-                          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                            <input 
-                              type="file" 
-                              className="form-input"
-                              style={{ padding: "6px" }}
-                              required={field.required}
-                              onChange={(e) => {
-                                const file = e.target.files[0];
-                                setPreviewAnswers({ ...previewAnswers, [field.label]: file ? file.name : "" });
-                              }}
-                            />
-                            <span style={{ fontSize: 11, color: "var(--color-ash)" }}>Límites: Archivos de hasta 10MB</span>
-                          </div>
-                        )}
-
+                      <div className="preview-empty-state">
+                        <Icon name="eye" size={24} style={{ color: "var(--color-slate)", marginBottom: 12 }} />
+                        <p>No hay preguntas visibles en este momento.</p>
+                        <span style={{ fontSize: 12, color: "var(--color-ash)" }}>Agrega campos al formulario o ajusta las reglas de visibilidad.</span>
                       </div>
                     );
-                  })}
+                  }
 
-                  <div style={{ display: "flex", gap: 10, marginTop: 14, justifyContent: "flex-end" }}>
-                    <button type="button" className="btn btn-secondary" onClick={() => setIsPreviewOpen(false)}>Cancelar</button>
-                    <button type="submit" className="btn btn-primary">
-                      Enviar Formulario
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="preview-success-state">
-                  <div className="preview-success-icon-wrap">
-                    <Icon name="chevron-right" size={20} style={{ transform: "rotate(-90deg)" }} />
-                  </div>
-                  <h3 className="preview-success-title">¡Envío exitoso!</h3>
-                  <p className="preview-success-text">
-                    {activeForm.thankYouText || "Tus datos han sido registrados correctamente en el sistema de base de datos local."}
-                  </p>
-                  <button className="btn btn-primary" onClick={() => setIsPreviewOpen(false)}>Cerrar Simulador</button>
+                  const currentField = visibleFields[currentStepIdx];
+                  if (!currentField) return null;
+
+                  const stepNum = String(currentStepIdx + 1).padStart(2, '0');
+                  const totalSteps = String(visibleFields.length).padStart(2, '0');
+
+                  return (
+                    <div className="preview-step-slide" key={currentField.id}>
+                      {/* Notion icon bar */}
+                      <div style={{ display: "flex", alignItems: "flex-start", marginBottom: 16 }}>
+                        <div className="notion-style-question-icon" style={{ marginBottom: 0 }}>
+                          <Icon name={`${currentField.type}-icon`} size={18} />
+                        </div>
+                      </div>
+
+                      {/* Step Header */}
+                      <div className="preview-step-header">
+                        <label className="preview-step-label">
+                          {currentField.label}
+                          {currentField.required && <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>}
+                        </label>
+                        {stepError && (
+                          <span className="notion-validation-text">
+                            <Icon name="alert-circle" size={12} style={{ color: "#ef4444", marginRight: 4 }} />
+                            <span>Obligatorio</span>
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Helper description/placeholder if present */}
+                      {currentField.placeholder && currentField.type !== "text" && currentField.type !== "email" && currentField.type !== "number" && (
+                        <p className="preview-step-desc">{currentField.placeholder}</p>
+                      )}
+
+                      {/* Inputs depending on field type */}
+                      <div className="preview-step-input-wrap">
+                        {currentField.type === "text" && (
+                          <input 
+                            type="text" 
+                            className={`typeform-text-input ${stepError ? "error" : ""}`} 
+                            placeholder={currentField.placeholder || "Escribe tu respuesta aquí..."}
+                            required={currentField.required}
+                            value={previewAnswers[currentField.label] || ""}
+                            onChange={(e) => {
+                              setPreviewAnswers({ ...previewAnswers, [currentField.label]: e.target.value });
+                              setStepError(false);
+                            }}
+                            autoFocus
+                          />
+                        )}
+
+                        {currentField.type === "email" && (
+                          <input 
+                            type="email" 
+                            className={`typeform-text-input ${stepError ? "error" : ""}`} 
+                            placeholder={currentField.placeholder || "ejemplo@correo.com"}
+                            required={currentField.required}
+                            value={previewAnswers[currentField.label] || ""}
+                            onChange={(e) => {
+                              setPreviewAnswers({ ...previewAnswers, [currentField.label]: e.target.value });
+                              setStepError(false);
+                            }}
+                            autoFocus
+                          />
+                        )}
+
+                        {currentField.type === "number" && (
+                          <input 
+                            type="number" 
+                            className={`typeform-text-input ${stepError ? "error" : ""}`} 
+                            placeholder={currentField.placeholder || "Escribe un número..."}
+                            required={currentField.required}
+                            value={previewAnswers[currentField.label] || ""}
+                            onChange={(e) => {
+                              setPreviewAnswers({ ...previewAnswers, [currentField.label]: e.target.value });
+                              setStepError(false);
+                            }}
+                            autoFocus
+                          />
+                        )}
+
+                        {currentField.type === "select" && (
+                          <div className="monograph-select-wrap">
+                            <button
+                              type="button"
+                              className={`monograph-select-trigger ${isSelectDropdownOpen ? 'active' : ''} ${stepError ? 'error' : ''}`}
+                              onClick={() => setIsSelectDropdownOpen(!isSelectDropdownOpen)}
+                            >
+                              <span className="select-trigger-text">
+                                {previewAnswers[currentField.label] || "Selecciona una opción..."}
+                              </span>
+                              <div className="monograph-select-arrow">
+                                <Icon name="chevron-down" size={16} />
+                              </div>
+                            </button>
+
+                            {isSelectDropdownOpen && (
+                              <div className="monograph-select-dropdown">
+                                {(currentField.options || []).map((opt) => {
+                                  const isSelected = previewAnswers[currentField.label] === opt;
+                                  return (
+                                    <div
+                                      key={opt}
+                                      className={`monograph-select-option-row ${isSelected ? 'selected' : ''}`}
+                                      onClick={() => {
+                                        setPreviewAnswers({ ...previewAnswers, [currentField.label]: opt });
+                                        setStepError(false);
+                                        setIsSelectDropdownOpen(false);
+                                      }}
+                                    >
+                                      <span className="select-option-text">{opt}</span>
+                                      {isSelected && (
+                                        <span className="select-option-check">
+                                          <Icon name="check" size={12} />
+                                        </span>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {currentField.type === "radio" && (
+                          <div className={`monograph-choices-list ${stepError ? 'error' : ''}`}>
+                            {(currentField.options || []).map((opt, oIdx) => {
+                              const isSelected = previewAnswers[currentField.label] === opt;
+                              return (
+                                <div 
+                                  key={opt} 
+                                  className={`monograph-choice-row ${isSelected ? 'selected' : ''}`}
+                                  onClick={() => {
+                                    setPreviewAnswers({ ...previewAnswers, [currentField.label]: opt });
+                                    setStepError(false);
+                                    setTimeout(() => {
+                                      handleNextStep();
+                                    }, 300);
+                                  }}
+                                >
+                                  <span className="monograph-choice-index">[{oIdx + 1}]</span>
+                                  <span className="monograph-choice-text">{opt}</span>
+                                  {isSelected && (
+                                    <span className="monograph-choice-check">
+                                      <Icon name="check" size={12} />
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {currentField.type === "checkbox" && (
+                          <div className={`monograph-choices-list ${stepError ? 'error' : ''}`}>
+                            {(currentField.options || []).map((opt, oIdx) => {
+                              const currentList = Array.isArray(previewAnswers[currentField.label]) ? previewAnswers[currentField.label] : [];
+                              const isSelected = currentList.includes(opt);
+                              return (
+                                <div 
+                                  key={opt} 
+                                  className={`monograph-choice-row ${isSelected ? 'selected' : ''}`}
+                                  onClick={() => {
+                                    const nextList = isSelected 
+                                      ? currentList.filter(v => v !== opt)
+                                      : [...currentList, opt];
+                                    setPreviewAnswers({ ...previewAnswers, [currentField.label]: nextList });
+                                    setStepError(false);
+                                  }}
+                                >
+                                  <span className="monograph-choice-index">[{oIdx + 1}]</span>
+                                  <span className="monograph-choice-text">{opt}</span>
+                                  {isSelected && (
+                                    <span className="monograph-choice-check">
+                                      <Icon name="check" size={12} />
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {currentField.type === "date" && (
+                          <input 
+                            type="date" 
+                            className={`typeform-text-input ${stepError ? "error" : ""}`} 
+                            required={currentField.required}
+                            value={previewAnswers[currentField.label] || ""}
+                            onChange={(e) => {
+                              setPreviewAnswers({ ...previewAnswers, [currentField.label]: e.target.value });
+                              setStepError(false);
+                            }}
+                            autoFocus
+                          />
+                        )}
+
+                        {currentField.type === "file" && (
+                          <div className="typeform-file-upload-wrap">
+                            <input 
+                              type="file" 
+                              id={`preview-file-${currentField.id}`}
+                              className="typeform-file-input"
+                              required={currentField.required}
+                              onChange={(e) => {
+                                const file = e.target.files[0];
+                                setPreviewAnswers({ ...previewAnswers, [currentField.label]: file ? file.name : "" });
+                                setStepError(false);
+                              }}
+                            />
+                            <label htmlFor={`preview-file-${currentField.id}`} className={`typeform-file-label ${stepError ? 'error' : ''}`}>
+                              <Icon name="file-icon" size={16} style={{ marginRight: 8 }} />
+                              <span>{previewAnswers[currentField.label] || "Subir un archivo (Máx. 10MB)"}</span>
+                            </label>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Enter prompt */}
+                      {currentField.type !== "checkbox" && (
+                        <div className="typeform-enter-prompt">
+                          <span>Presiona</span>
+                          <kbd className="typeform-kbd">Enter</kbd>
+                          <span>o haz clic en Avanzar</span>
+                          <Icon name="corner-down-left" size={12} style={{ marginLeft: 4, opacity: 0.6 }} />
+                        </div>
+                      )}
+                      {currentField.type === "checkbox" && (
+                        <div className="typeform-enter-prompt">
+                          <span>Selecciona las opciones que desees y avanza</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              /* Success / Thank You screen */
+              <div className="preview-typeform-thankyou">
+                <div className="typeform-thankyou-icon">
+                  <Icon name="check" size={20} style={{ color: "var(--color-pure-paper)" }} />
                 </div>
-              )}
-            </div>
+                <h3 className="typeform-thankyou-title">¡Envío exitoso!</h3>
+                <p className="typeform-thankyou-text">
+                  {activeForm.thankYouText || "Tus datos han sido registrados correctamente en el sistema de base de datos local."}
+                </p>
+                <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
+                  <button className="typeform-btn-secondary" onClick={openFormPreview}>
+                    Responder otra vez
+                  </button>
+                  <button className="typeform-btn-primary" onClick={() => setIsPreviewOpen(false)}>
+                    Cerrar Simulador
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Bottom Navigation & Progress bar */}
+          {!showThankYou && (
+            <div className="preview-typeform-nav-bar">
+              {(() => {
+                const visibleFields = getVisibleFields();
+                if (visibleFields.length === 0) return null;
+                
+                const percent = Math.round((currentStepIdx / visibleFields.length) * 100);
+                const isLast = currentStepIdx === visibleFields.length - 1;
+
+                return (
+                  <>
+                    <div className="typeform-progress-wrap">
+                      <div className="typeform-progress-text">
+                        <span>Pregunta {currentStepIdx + 1} de {visibleFields.length}</span>
+                        <span className="typeform-progress-percent">{percent}% completado</span>
+                      </div>
+                      <div className="typeform-progress-track">
+                        <div className="typeform-progress-bar" style={{ width: `${percent}%` }}></div>
+                      </div>
+                    </div>
+
+                    <div className="typeform-nav-buttons">
+                      <button 
+                        type="button" 
+                        className="typeform-nav-btn" 
+                        onClick={handlePrevStep}
+                        disabled={currentStepIdx === 0}
+                        title="Pregunta anterior"
+                      >
+                        <Icon name="arrow-up" size={16} />
+                        <span className="hide-on-mobile" style={{ marginLeft: 6 }}>Volver</span>
+                      </button>
+                      
+                      <button 
+                        type="button" 
+                        className="typeform-nav-btn primary" 
+                        onClick={handleNextStep}
+                        title={isLast ? "Enviar formulario" : "Siguiente pregunta"}
+                      >
+                        {isLast ? (
+                          <>
+                            <span style={{ marginRight: 6 }}>Enviar</span>
+                            <Icon name="check" size={14} />
+                          </>
+                        ) : (
+                          <>
+                            <span className="hide-on-mobile" style={{ marginRight: 6 }}>Avanzar</span>
+                            <Icon name="arrow-down" size={16} />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          )}
         </div>
       )}
     </div>
