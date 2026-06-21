@@ -316,6 +316,21 @@ export default function SaaSApp() {
     setIsMounted(true);
   }, []);
 
+  // Listen for Escape key to close mobile sidebar
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setIsMobileSidebarOpen(false);
+      }
+    };
+    if (isMobileSidebarOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMobileSidebarOpen]);
+
   // 2. Load and seed data scoped by workspace from localStorage
   useEffect(() => {
     if (!isMounted) return;
@@ -1354,13 +1369,24 @@ export default function SaaSApp() {
   return (
     <div className="app-shell">
       {/* Mobile Sidebar Backdrop */}
-      <div className={`sidebar-backdrop ${isMobileSidebarOpen ? "active" : ""}`} onClick={() => setIsMobileSidebarOpen(false)} />
+      <div 
+        className={`sidebar-backdrop ${isMobileSidebarOpen ? "active" : ""}`} 
+        onClick={() => setIsMobileSidebarOpen(false)} 
+        role="button"
+        aria-label="Cerrar menú de navegación"
+        tabIndex={isMobileSidebarOpen ? 0 : -1}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setIsMobileSidebarOpen(false); }}
+      />
 
       {/* ============================================================
           SIDEBAR NAVIGATION (03-ui-architecture.md)
           ============================================================ */}
-      <aside className={`sidebar ${isMobileSidebarOpen ? "mobile-open" : ""}`}>
-        <button className="mobile-menu-close" onClick={() => setIsMobileSidebarOpen(false)}>
+      <aside className={`sidebar ${isMobileSidebarOpen ? "mobile-open" : ""}`} aria-label="Menú principal">
+        <button 
+          className="mobile-menu-close" 
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-label="Cerrar menú de navegación"
+        >
           <Icon name="x" size={16} />
         </button>
         <div className="sidebar-brand">
@@ -1442,7 +1468,12 @@ export default function SaaSApp() {
         {/* Topbar with breadcrumb & actions */}
         <header className="topbar">
           <div className="breadcrumb" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <button className="mobile-menu-toggle" onClick={() => setIsMobileSidebarOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <button 
+              className="mobile-menu-toggle" 
+              onClick={() => setIsMobileSidebarOpen(true)}
+              aria-label="Abrir menú de navegación"
+              aria-expanded={isMobileSidebarOpen}
+            >
               <Icon name="menu" size={16} style={{ color: 'var(--color-ink)' }} />
             </button>
             <span>Workspaces</span> 
