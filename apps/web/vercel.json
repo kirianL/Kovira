@@ -1,0 +1,13 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/app",
+      "destination": "https://kovira-app.vercel.app/app"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "https://kovira-app.vercel.app/app/:path*"
+    }
+  ]
+}
