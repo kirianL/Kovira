@@ -20,7 +20,8 @@ function Icon({ name, className = "", style = {}, size = 14 }) {
     copy: Lucide.Copy,
     x: Lucide.X,
     "arrow-up": Lucide.ArrowUp,
-    "arrow-down": Lucide.ArrowDown
+    "arrow-down": Lucide.ArrowDown,
+    menu: Lucide.Menu
   };
 
   const LucideIcon = mapping[name] || Lucide.HelpCircle;
@@ -46,6 +47,7 @@ export default function SaaSApp() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [activeWorkspace, setActiveWorkspace] = useState("personal");
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Workspace Database State
   const [forms, setForms] = useState([]);
@@ -1058,10 +1060,16 @@ export default function SaaSApp() {
 
   return (
     <div className="app-shell">
+      {/* Mobile Sidebar Backdrop */}
+      <div className={`sidebar-backdrop ${isMobileSidebarOpen ? "active" : ""}`} onClick={() => setIsMobileSidebarOpen(false)} />
+
       {/* ============================================================
           SIDEBAR NAVIGATION (03-ui-architecture.md)
           ============================================================ */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${isMobileSidebarOpen ? "mobile-open" : ""}`}>
+        <button className="mobile-menu-close" onClick={() => setIsMobileSidebarOpen(false)}>
+          <Icon name="x" size={16} />
+        </button>
         <div className="sidebar-brand">
           <div className="brand-mark" style={{ color: 'var(--color-ink)' }}>
             <svg style={{ height: '20px', width: 'auto' }} viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1088,15 +1096,15 @@ export default function SaaSApp() {
         <div className="sidebar-divider" />
 
         {/* 03-ui-architecture.md Layout links */}
-        <div className={`nav-item ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => setActiveTab("dashboard")}>
+        <div className={`nav-item ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => { setActiveTab("dashboard"); setIsMobileSidebarOpen(false); }}>
           <div className="nav-icon"><Icon name="dashboard" /></div>
           Dashboard
         </div>
-        <div className={`nav-item ${activeTab === "form-builder" ? "active" : ""}`} onClick={() => setActiveTab("form-builder")}>
+        <div className={`nav-item ${activeTab === "form-builder" ? "active" : ""}`} onClick={() => { setActiveTab("form-builder"); setIsMobileSidebarOpen(false); }}>
           <div className="nav-icon"><Icon name="form" /></div>
           Form Builder
         </div>
-        <div className={`nav-item ${activeTab === "submissions" ? "active" : ""}`} onClick={() => setActiveTab("submissions")}>
+        <div className={`nav-item ${activeTab === "submissions" ? "active" : ""}`} onClick={() => { setActiveTab("submissions"); setIsMobileSidebarOpen(false); }}>
           <div className="nav-icon"><Icon name="inbox" /></div>
           Submissions
           {submissions.filter(s => s.status === "pending").length > 0 && (
@@ -1105,11 +1113,11 @@ export default function SaaSApp() {
             </span>
           )}
         </div>
-        <div className={`nav-item ${activeTab === "workflows" ? "active" : ""}`} onClick={() => setActiveTab("workflows")}>
+        <div className={`nav-item ${activeTab === "workflows" ? "active" : ""}`} onClick={() => { setActiveTab("workflows"); setIsMobileSidebarOpen(false); }}>
           <div className="nav-icon"><Icon name="flow" /></div>
           Workflows
         </div>
-        <div className={`nav-item ${activeTab === "analytics" ? "active" : ""}`} onClick={() => setActiveTab("analytics")}>
+        <div className={`nav-item ${activeTab === "analytics" ? "active" : ""}`} onClick={() => { setActiveTab("analytics"); setIsMobileSidebarOpen(false); }}>
           <div className="nav-icon"><Icon name="chart-pie" /></div>
           Analytics
         </div>
@@ -1117,7 +1125,7 @@ export default function SaaSApp() {
         <div className="sidebar-divider" />
         <div className="nav-section-label">Configuración</div>
 
-        <div className={`nav-item ${activeTab === "settings" ? "active" : ""}`} onClick={() => setActiveTab("settings")}>
+        <div className={`nav-item ${activeTab === "settings" ? "active" : ""}`} onClick={() => { setActiveTab("settings"); setIsMobileSidebarOpen(false); }}>
           <div className="nav-icon"><Icon name="cog" /></div>
           Workspace &amp; API
         </div>
@@ -1141,6 +1149,9 @@ export default function SaaSApp() {
         {/* Topbar with breadcrumb & actions */}
         <header className="topbar">
           <div className="breadcrumb" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <button className="mobile-menu-toggle" onClick={() => setIsMobileSidebarOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="menu" size={16} style={{ color: 'var(--color-ink)' }} />
+            </button>
             <span>Workspaces</span> 
             <Icon name="chevron-right" style={{ width: 10, height: 10, color: 'var(--color-ash)' }} /> 
             <span>{workspaceName}</span> 
