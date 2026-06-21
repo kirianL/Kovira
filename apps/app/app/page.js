@@ -21,7 +21,17 @@ function Icon({ name, className = "", style = {}, size = 14 }) {
     x: Lucide.X,
     "arrow-up": Lucide.ArrowUp,
     "arrow-down": Lucide.ArrowDown,
-    menu: Lucide.Menu
+    menu: Lucide.Menu,
+    "text-icon": Lucide.Type,
+    "email-icon": Lucide.Mail,
+    "number-icon": Lucide.Hash,
+    "select-icon": Lucide.ChevronDownSquare,
+    "checkbox-icon": Lucide.CheckSquare,
+    "radio-icon": Lucide.CircleDot,
+    "date-icon": Lucide.Calendar,
+    "file-icon": Lucide.UploadCloud,
+    "grip-vertical": Lucide.GripVertical,
+    eye: Lucide.Eye
   };
 
   const LucideIcon = mapping[name] || Lucide.HelpCircle;
@@ -1225,7 +1235,7 @@ export default function SaaSApp() {
             </div>
 
             {/* Layout grid for activity and actions */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 20, marginTop: 24 }}>
+            <div className="responsive-grid-2col" style={{ marginTop: 24 }}>
               {/* Quick Actions (03-ui-architecture.md) */}
               <div style={{ background: "var(--color-pure-paper)", border: "1px solid var(--color-soft-mist)", borderRadius: "var(--radius-cards)", padding: "20px", boxShadow: "var(--shadow-subtle)" }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, borderBottom: "1px solid var(--color-soft-mist)", paddingBottom: 10, marginBottom: 16 }}>
@@ -1354,17 +1364,17 @@ export default function SaaSApp() {
                     <div className="builder-sub" style={{ fontSize: 11.5, margin: "0 0 10px 0" }}>Haz clic en un componente para agregarlo al formulario:</div>
                     <div className="field-chip-list">
                       {[
-                        { type: "text", label: "Texto Corto", icon: "ti-text-size" },
-                        { type: "email", label: "Correo Electrónico", icon: "ti-mail" },
-                        { type: "number", label: "Número", icon: "ti-hash" },
-                        { type: "select", label: "Lista Desplegable", icon: "ti-select" },
-                        { type: "checkbox", label: "Opción Múltiple", icon: "ti-checkbox" },
-                        { type: "radio", label: "Opción Única", icon: "ti-circle-dot" },
-                        { type: "date", label: "Selector Fecha", icon: "ti-calendar" },
-                        { type: "file", label: "Subir Archivo", icon: "ti-upload" }
+                        { type: "text", label: "Texto Corto", icon: "text-icon" },
+                        { type: "email", label: "Correo Electrónico", icon: "email-icon" },
+                        { type: "number", label: "Número", icon: "number-icon" },
+                        { type: "select", label: "Lista Desplegable", icon: "select-icon" },
+                        { type: "checkbox", label: "Opción Múltiple", icon: "checkbox-icon" },
+                        { type: "radio", label: "Opción Única", icon: "radio-icon" },
+                        { type: "date", label: "Selector Fecha", icon: "date-icon" },
+                        { type: "file", label: "Subir Archivo", icon: "file-icon" }
                       ].map((item) => (
                         <div key={item.type} className="field-chip" onClick={() => addFieldToForm(item.type)}>
-                          <i className={`ti ${item.icon}`} />
+                          <Icon name={item.icon} size={13} style={{ color: "var(--color-slate)" }} />
                           {item.label}
                         </div>
                       ))}
@@ -1388,41 +1398,108 @@ export default function SaaSApp() {
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                      {activeForm.fields.map((field, idx) => (
+                       {activeForm.fields.map((field, idx) => (
                         <div 
                           key={field.id} 
                           className={`canvas-field ${selectedFieldId === field.id ? "selected" : ""}`}
                           onClick={() => setSelectedFieldId(field.id)}
                         >
-                          <div className="canvas-field-drag"><i className="ti ti-menu-order" /></div>
-                          <div className="canvas-field-info">
-                            <div className="canvas-field-label">
-                              {field.label || `Campo ${field.type}`}
-                              {field.required && <span className="canvas-field-required">*</span>}
+                          <div className="canvas-field-header-row">
+                            <div className="canvas-field-drag" style={{ cursor: "grab", display: "flex", alignItems: "center" }}>
+                              <Icon name="grip-vertical" size={14} style={{ color: "var(--color-fog)" }} />
                             </div>
-                            <div className="canvas-field-placeholder">
-                              Tipo: {field.type} {field.placeholder ? `| Placeholder: "${field.placeholder}"` : ""}
+                            
+                            <div className="canvas-field-title-wrap">
+                              <span className="canvas-field-type-tag">
+                                <Icon name={`${field.type}-icon`} size={10} style={{ marginRight: 4 }} />
+                                {field.type === "text" ? "Texto" : field.type === "select" ? "Desplegable" : field.type}
+                              </span>
+                              <span className="canvas-field-label" style={{ fontWeight: 600, fontSize: 13, color: "var(--color-ink)" }}>
+                                {field.label || `Campo ${field.type}`}
+                                {field.required && <span className="canvas-field-required">*</span>}
+                              </span>
                             </div>
-                            {field.condition && field.condition.fieldId && (
-                              <div className="condition-badge">
-                                <i className="ti ti-git-fork" /> Mostrar si target es "{field.condition.equalsValue}"
+
+                            <div className="canvas-field-actions">
+                              <button className="btn-field-action" title="Mover Arriba" onClick={(e) => { e.stopPropagation(); moveField(idx, -1); }} disabled={idx === 0}>
+                                <Icon name="arrow-up" size={12} />
+                              </button>
+                              <button className="btn-field-action" title="Mover Abajo" onClick={(e) => { e.stopPropagation(); moveField(idx, 1); }} disabled={idx === activeForm.fields.length - 1}>
+                                <Icon name="arrow-down" size={12} />
+                              </button>
+                              <button className="btn-field-action" title="Duplicar" onClick={(e) => { e.stopPropagation(); duplicateField(field); }}>
+                                <Icon name="copy" size={12} />
+                              </button>
+                              <button className="btn-field-action" title="Eliminar" style={{ color: "#ef4444" }} onClick={(e) => { e.stopPropagation(); deleteField(field.id); }}>
+                                <Icon name="trash" size={12} />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="canvas-field-mockup-wrapper">
+                            {field.type === "text" && (
+                              <div className="mock-input">
+                                {field.placeholder || "Texto de respuesta corta..."}
+                              </div>
+                            )}
+                            {field.type === "email" && (
+                              <div className="mock-input">
+                                <Icon name="email-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
+                                {field.placeholder || "correo@ejemplo.com"}
+                              </div>
+                            )}
+                            {field.type === "number" && (
+                              <div className="mock-input">
+                                <Icon name="number-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
+                                {field.placeholder || "Número..."}
+                              </div>
+                            )}
+                            {field.type === "date" && (
+                              <div className="mock-input">
+                                <Icon name="date-icon" size={13} style={{ marginRight: 6, color: "var(--color-slate)" }} />
+                                {field.placeholder || "dd/mm/aaaa"}
+                              </div>
+                            )}
+                            {field.type === "select" && (
+                              <div className="mock-select-dropdown">
+                                <span>{field.placeholder || "Selecciona una opción..."}</span>
+                                <Icon name="chevron-down" size={12} style={{ color: "var(--color-slate)" }} />
+                              </div>
+                            )}
+                            {field.type === "radio" && (
+                              <div className="mock-options-list">
+                                {(field.options && field.options.length > 0 ? field.options : ["Opción 1", "Opción 2"]).map((opt, oIdx) => (
+                                  <div key={oIdx} className="mock-option-item">
+                                    <div className="mock-radio-dot" />
+                                    <span>{opt}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {field.type === "checkbox" && (
+                              <div className="mock-options-list">
+                                {(field.options && field.options.length > 0 ? field.options : ["Opción 1", "Opción 2"]).map((opt, oIdx) => (
+                                  <div key={oIdx} className="mock-option-item">
+                                    <div className="mock-checkbox-box" />
+                                    <span>{opt}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {field.type === "file" && (
+                              <div className="mock-file-upload-zone">
+                                <Icon name="file-icon" size={16} style={{ color: "var(--color-slate)" }} />
+                                <span>{field.placeholder || "Subir archivo (máx. 10MB)"}</span>
                               </div>
                             )}
                           </div>
-                          <div className="canvas-field-actions">
-                            <button className="btn-field-action" title="Mover Arriba" onClick={(e) => { e.stopPropagation(); moveField(idx, -1); }} disabled={idx === 0}>
-                              <i className="ti ti-arrow-up" />
-                            </button>
-                            <button className="btn-field-action" title="Mover Abajo" onClick={(e) => { e.stopPropagation(); moveField(idx, 1); }} disabled={idx === activeForm.fields.length - 1}>
-                              <i className="ti ti-arrow-down" />
-                            </button>
-                            <button className="btn-field-action" title="Duplicar" onClick={(e) => { e.stopPropagation(); duplicateField(field); }}>
-                              <i className="ti ti-copy" />
-                            </button>
-                            <button className="btn-field-action" title="Eliminar" style={{ color: "#ef4444" }} onClick={(e) => { e.stopPropagation(); deleteField(field.id); }}>
-                              <i className="ti ti-trash" />
-                            </button>
-                          </div>
+
+                          {field.condition && field.condition.fieldId && (
+                            <div className="condition-badge" style={{ alignSelf: "flex-start" }}>
+                              <Icon name="flow" size={10} style={{ marginRight: 4 }} />
+                              <span>Mostrar si target es "{field.condition.equalsValue}"</span>
+                            </div>
+                          )}
                         </div>
                       ))}
 
@@ -1438,7 +1515,7 @@ export default function SaaSApp() {
                       <h4 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-secondary)", marginBottom: 14, borderBottom: "1px solid var(--border-hairline)", paddingBottom: 8 }}>
                         Configuraciones de Envío &amp; Apariencia
                       </h4>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                      <div className="responsive-grid-form-settings">
                         <div className="form-group">
                           <label>Tema del Formulario</label>
                           <select 
@@ -1470,7 +1547,7 @@ export default function SaaSApp() {
                             }}
                           />
                         </div>
-                        <div className="form-group" style={{ gridColumn: "span 2" }}>
+                        <div className="form-group form-settings-span-2">
                           <label>Mensaje de Agradecimiento</label>
                           <textarea 
                             rows="2"
@@ -2005,7 +2082,7 @@ export default function SaaSApp() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 20 }}>
+                <div className="responsive-grid-workflows">
                   
                   {/* Left Column: Visual flow builder */}
                   <div style={{ background: "var(--bg-surface)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-lg)", padding: "20px", boxShadow: "var(--shadow-card)" }}>
@@ -2111,7 +2188,7 @@ export default function SaaSApp() {
               TAB: ANALYTICS
               ============================================================ */}
           <div className={`tab-content ${activeTab === "analytics" ? "active" : ""}`}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 14, marginBottom: 24 }}>
+            <div className="responsive-grid-metrics" style={{ marginBottom: 24 }}>
               <div className="metric-card" style={{ marginBottom: 0 }}>
                 <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "var(--text-disabled)" }}>Total de vistas</div>
                 <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4 }}>{totalViews}</div>
@@ -2201,7 +2278,7 @@ export default function SaaSApp() {
               TAB: SETTINGS (Workspace, API Keys & Team Collaboration)
               ============================================================ */}
           <div className={`tab-content ${activeTab === "settings" ? "active" : ""}`}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            <div className="responsive-grid-settings">
               
               {/* Workspace Config Form */}
               <div style={{ background: "var(--bg-surface)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-lg)", padding: "20px", boxShadow: "var(--shadow-card)" }}>
@@ -2299,7 +2376,7 @@ export default function SaaSApp() {
               </div>
 
               {/* API Keys section */}
-              <div style={{ background: "var(--bg-surface)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-lg)", padding: "20px", gridColumn: "span 2", boxShadow: "var(--shadow-card)" }}>
+              <div className="settings-span-2" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-lg)", padding: "20px", boxShadow: "var(--shadow-card)" }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, borderBottom: "1px solid var(--border-hairline)", paddingBottom: 10, marginBottom: 16 }}>
                   Claves de API de Acceso (Credentials)
                 </h4>
@@ -2388,14 +2465,14 @@ export default function SaaSApp() {
           ============================================================ */}
       {isPreviewOpen && activeForm && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{ borderTop: `6px solid ${activeForm.theme === "Sage" ? "#22c55e" : activeForm.theme === "Rose" ? "#be185d" : activeForm.theme === "Obsidian" ? "#1A1A1A" : "#4338ca"}` }}>
+          <div className="modal-content">
             <div className="modal-header">
               <div>
-                <h4 style={{ fontWeight: 800 }}>Simulador: {activeForm.name}</h4>
-                <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>Tema del formulario: {activeForm.theme || "Predeterminado"}</span>
+                <h4 style={{ fontWeight: 700 }}>Simulador: {activeForm.name}</h4>
+                <span style={{ fontSize: 11, color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>Tema: {activeForm.theme || "Predeterminado"}</span>
               </div>
               <button className="btn-field-action" onClick={() => setIsPreviewOpen(false)}>
-                <i className="ti ti-x" style={{ fontSize: 18 }} />
+                <Icon name="x" size={16} />
               </button>
             </div>
             
@@ -2404,7 +2481,7 @@ export default function SaaSApp() {
                 <form onSubmit={handlePreviewSubmit} className="preview-form">
                   
                   {previewError && (
-                    <div style={{ background: "#fee2e2", border: "1px solid #fecaca", color: "#dc2626", padding: 10, borderRadius: 6, fontSize: 12.5, fontWeight: 600 }}>
+                    <div style={{ background: "#fee2e2", border: "1px solid #fecaca", color: "#dc2626", padding: 10, borderRadius: 4, fontSize: 12.5, fontWeight: 600 }}>
                       {previewError}
                     </div>
                   )}
@@ -2417,7 +2494,7 @@ export default function SaaSApp() {
                       <div key={field.id} className="form-group">
                         <label>
                           {field.label}
-                          {field.required && <span style={{ color: "#ef4444" }}>*</span>}
+                          {field.required && <span style={{ color: "#ef4444", marginLeft: 2 }}>*</span>}
                         </label>
 
                         {field.type === "text" && (
@@ -2528,7 +2605,7 @@ export default function SaaSApp() {
                                 setPreviewAnswers({ ...previewAnswers, [field.label]: file ? file.name : "" });
                               }}
                             />
-                            <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>Límites: Archivos de hasta 10MB</span>
+                            <span style={{ fontSize: 11, color: "var(--color-ash)" }}>Límites: Archivos de hasta 10MB</span>
                           </div>
                         )}
 
@@ -2538,21 +2615,21 @@ export default function SaaSApp() {
 
                   <div style={{ display: "flex", gap: 10, marginTop: 14, justifyContent: "flex-end" }}>
                     <button type="button" className="btn btn-secondary" onClick={() => setIsPreviewOpen(false)}>Cancelar</button>
-                    <button type="submit" className="btn btn-primary" style={{ background: activeForm.theme === "Sage" ? "#22c55e" : activeForm.theme === "Rose" ? "#be185d" : activeForm.theme === "Obsidian" ? "#1A1A1A" : "#4338ca", color: "#FFF" }}>
+                    <button type="submit" className="btn btn-primary">
                       Enviar Formulario
                     </button>
                   </div>
                 </form>
               ) : (
-                <div style={{ textAlign: "center", padding: "32px 10px" }}>
-                  <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#dcfce7", color: "#15803d", display: "flex", alignItems: "center", justifyCenter: "center", margin: "0 auto 16px", fontSize: 24 }}>
-                    <i className="ti ti-check" style={{ margin: "auto" }} />
+                <div className="preview-success-state">
+                  <div className="preview-success-icon-wrap">
+                    <Icon name="chevron-right" size={20} style={{ transform: "rotate(-90deg)" }} />
                   </div>
-                  <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>¡Envío exitoso!</h3>
-                  <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                  <h3 className="preview-success-title">¡Envío exitoso!</h3>
+                  <p className="preview-success-text">
                     {activeForm.thankYouText || "Tus datos han sido registrados correctamente en el sistema de base de datos local."}
                   </p>
-                  <button className="btn btn-primary" style={{ marginTop: 24 }} onClick={() => setIsPreviewOpen(false)}>Cerrar Simulador</button>
+                  <button className="btn btn-primary" onClick={() => setIsPreviewOpen(false)}>Cerrar Simulador</button>
                 </div>
               )}
             </div>

@@ -9,7 +9,7 @@ interface Props {
 
 const { title, activeTab } = Astro.props;
 ---
-<html lang="en" class="overflow-hidden h-dvh w-full bg-[#090a16]">
+<html lang="en" class="overflow-x-hidden min-h-dvh w-full bg-[#090a16]">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,9 +19,9 @@ const { title, activeTab } = Astro.props;
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <ClientRouter />
 </head>
-<body class="is-initial-load overflow-hidden h-dvh w-full text-white antialiased tracking-[-0.025em]">
+<body class="is-initial-load overflow-x-hidden min-h-dvh w-full text-white antialiased tracking-[-0.025em] flex flex-col">
 
-  <div id="landing-view" transition:name="landing-view" class="relative w-full h-dvh overflow-hidden flex flex-col justify-between bg-hero-pattern bg-cover bg-center bg-no-repeat hero-dot-matrix">
+  <div id="landing-view" transition:name="landing-view" class="relative w-full min-h-dvh overflow-x-hidden flex flex-col justify-between bg-hero-pattern bg-cover bg-center bg-no-repeat hero-dot-matrix">
     
     <nav transition:name="navbar" transition:animate="none" class="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center px-12 h-16 max-[768px]:px-6 max-[768px]:grid-cols-[1fr_auto]">
       <a href="/" class="flex items-center gap-2.5 justify-self-start text-white hover:opacity-90 transition-opacity cursor-pointer">
