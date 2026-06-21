@@ -2,26 +2,33 @@
 
 import { useState, useEffect, useMemo } from "react";
 
-// Notion/Linear style Icon loader from DESIGN.md
+// Notion/Linear style Icon loader using Tabler Icons CDN (loaded in layout.js)
 function Icon({ name, className = "", style = {} }) {
+  const mapping = {
+    dashboard: "ti-layout-dashboard",
+    form: "ti-forms",
+    inbox: "ti-database",
+    flow: "ti-git-branch",
+    "chart-pie": "ti-chart-pie",
+    cog: "ti-settings",
+    "chevron-right": "ti-chevron-right",
+    "new-window-page": "ti-external-link",
+    bell: "ti-bell",
+    plus: "ti-plus"
+  };
+  const iconClass = mapping[name] || `ti-${name}`;
   return (
-    <span 
-      className={`inline-block ${className}`}
+    <i 
+      className={`ti ${iconClass} ${className}`} 
       style={{
-        width: '16px',
-        height: '16px',
-        backgroundColor: 'currentColor',
-        maskImage: `url(/app/icons/${name}.svg)`,
-        maskPosition: '0 -32px', // 3rd style variant (Regular)
-        maskSize: '16px 48px',
-        WebkitMaskImage: `url(/app/icons/${name}.svg)`,
-        WebkitMaskPosition: '0 -32px',
-        WebkitMaskSize: '16px 48px',
-        maskRepeat: 'no-repeat',
-        WebkitMaskRepeat: 'no-repeat',
-        flexShrink: 0,
-        display: 'inline-block',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         verticalAlign: 'middle',
+        fontSize: '14px',
+        lineHeight: '1',
+        width: '14px',
+        height: '14px',
         ...style
       }}
     />

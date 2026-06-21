@@ -384,7 +384,7 @@ h3 {
   color: var(--color-slate);
 }
 
-.form-input, .form-select, .form-textarea {
+.form-input, .form-textarea {
   width: 100%;
   padding: 7px 10px;
   font-size: 13px;
@@ -396,7 +396,23 @@ h3 {
   font-family: var(--font-sans);
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.form-select, .filter-select {
+  padding: 7px 28px 7px 10px;
+  font-size: 13px;
+  border: 1px solid var(--color-soft-mist);
+  border-radius: var(--radius-inputs);
+  background: var(--color-pure-paper);
+  color: var(--color-ink);
+  outline: none;
+  font-family: var(--font-sans);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23262626' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus, .filter-select:focus {
   border-color: var(--color-ink);
 }
 
