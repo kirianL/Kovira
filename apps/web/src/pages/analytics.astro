@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Analytics Dashboard — Kovira" activeTab="analytics">
+    <div class="relative z-5 flex-1 flex flex-col items-center justify-center text-center px-6 py-6 max-w-[840px] mx-auto w-full max-[768px]:px-5 max-[768px]:py-2 overflow-hidden">
+      
+      <h1 class="text-[clamp(32px,_4.5vw,_52px)] font-extrabold leading-[1.12] tracking-[-0.025em] mb-4 max-[768px]:mb-2 flex flex-col items-center gap-1 max-[768px]:text-[clamp(24px,_8vw,_34px)] text-white">
+        <span class="reveal-wrapper">
+          <span class="reveal-text delay-1">Gain deep insights from</span>
+        </span>
+        <span class="reveal-wrapper">
+          <span class="reveal-text delay-2">your submission analytics.</span>
+        </span>
+      </h1>
+      
+      <p class="text-[clamp(14px,_1.6vw,_17px)] text-white/80 max-w-[580px] leading-relaxed mb-6 max-[768px]:text-[13.5px] max-[768px]:mb-3 max-[768px]:max-w-[95%] animate-fade-in delay-3">
+        Track conversions, view entry completions, and analyze regional collection metrics in real-time. Integrate intelligence and custom reports into your workflow.
+      </p>
+
+      <div class="flex justify-center mb-8 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mb-3 animate-fade-in delay-4">
+        <button class="open-login-btn bg-ink text-white px-6 py-2.5 rounded-buttons text-sm font-medium tracking-[-0.025em] border border-white/15 btn-primary-shadow transition-all duration-200 hover:bg-charcoal hover:-translate-y-[1px] cursor-pointer max-[768px]:w-full max-[768px]:py-3">Open Dashboard</button>
+      </div>
+
+      <div class="flex items-center justify-center gap-1.5 p-1 bg-white/5 border border-white/10 backdrop-blur-md rounded-full mb-6 max-[768px]:mb-3 animate-fade-in delay-4">
+        <span class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-ink">Interactive Analytics Preview</span>
+      </div>
+
+      <div class="w-full max-w-[720px] h-[260px] border border-soft-mist rounded-[12px] bg-white mockup-shadow overflow-hidden flex text-left max-[768px]:h-[170px] animate-fade-in delay-4">
+        
+        <div class="w-36 bg-[#fcfcfc] border-r border-soft-mist p-3.5 flex flex-col gap-2 max-[768px]:w-10 max-[768px]:p-1.5">
+          <div class="flex items-center gap-2 max-[768px]:justify-center">
+            <div class="w-3.5 h-3.5 bg-ink/10 rounded-sm"></div>
+            <div class="h-2 w-14 bg-ink/15 rounded-sm max-[768px]:hidden"></div>
+          </div>
+          <div class="w-full h-[1px] bg-soft-mist my-1"></div>
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center gap-2 p-1 bg-[#ededed] rounded-[4px] max-[768px]:justify-center">
+              <svg class="w-3.5 h-3.5 text-ink flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM18 18.75V15.75m0 3a2.25 2.25 0 01-2.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-3m3 13.5a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM9 5.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path></svg>
+              <div class="h-1.5 w-16 bg-ink/20 rounded-sm max-[768px]:hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 p-5 overflow-hidden flex flex-col bg-white max-[768px]:p-3 text-ink">
+          <div class="flex items-center justify-between border-b border-soft-mist pb-3 mb-3 max-[768px]:pb-2 max-[768px]:mb-2">
+            <div class="flex flex-col gap-1">
+              <div class="h-3 w-32 bg-ink/70 rounded-sm max-[768px]:w-20"></div>
+              <div class="h-1.5 w-44 bg-ash/40 rounded-sm max-[768px]:hidden"></div>
+            </div>
+            <div class="h-5 w-12 bg-ink/10 rounded-full max-[768px]:h-4 max-[768px]:w-8"></div>
+          </div>
+
+          <div class="flex-1 relative w-full h-full">
+            <div class="absolute inset-0 flex flex-col gap-3 h-full w-full">
+              <div class="grid grid-cols-3 gap-2.5 max-[768px]:gap-1">
+                <div class="border border-soft-mist rounded-[6px] p-2 bg-[#fbfbfb]">
+                  <div class="text-[8px] uppercase tracking-wider text-ash font-medium mb-1">Views</div>
+                  <div class="text-sm font-bold text-ink leading-none">1,280</div>
+                </div>
+                <div class="border border-soft-mist rounded-[6px] p-2 bg-[#fbfbfb]">
+                  <div class="text-[8px] uppercase tracking-wider text-ash font-medium mb-1">Submissions</div>
+                  <div class="text-sm font-bold text-ink leading-none">340</div>
+                </div>
+                <div class="border border-soft-mist rounded-[6px] p-2 bg-[#fbfbfb]">
+                  <div class="text-[8px] uppercase tracking-wider text-ash font-medium mb-1">Conversion</div>
+                  <div class="text-sm font-bold text-ink leading-none">26.5%</div>
+                </div>
+              </div>
+              <div class="flex-1 border border-soft-mist rounded-[6px] p-2 bg-[#fcfcfc] flex items-end justify-between relative overflow-hidden">
+                <svg class="absolute inset-0 w-full h-full p-2" viewBox="0 0 100 30" preserveAspectRatio="none">
+                  <path d="M 0 25 Q 20 20 40 12 T 80 8 T 100 2" fill="none" stroke="#262626" stroke-width="1.5" />
+                  <path d="M 0 25 Q 20 20 40 12 T 80 8 T 100 2 L 100 30 L 0 30 Z" fill="rgba(38,38,38,0.03)" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</Layout>

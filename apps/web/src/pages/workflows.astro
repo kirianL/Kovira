@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Workflows Builder — Kovira" activeTab="workflows">
+    <div class="relative z-5 flex-1 flex flex-col items-center justify-center text-center px-6 py-6 max-w-[840px] mx-auto w-full max-[768px]:px-5 max-[768px]:py-2 overflow-hidden">
+      
+      <h1 class="text-[clamp(32px,_4.5vw,_52px)] font-extrabold leading-[1.12] tracking-[-0.025em] mb-4 max-[768px]:mb-2 flex flex-col items-center gap-1 max-[768px]:text-[clamp(24px,_8vw,_34px)] text-white">
+        <span class="reveal-wrapper">
+          <span class="reveal-text delay-1">Automate your processes</span>
+        </span>
+        <span class="reveal-wrapper">
+          <span class="reveal-text delay-2">with dynamic visual logic.</span>
+        </span>
+      </h1>
+      
+      <p class="text-[clamp(14px,_1.6vw,_17px)] text-white/80 max-w-[580px] leading-relaxed mb-6 max-[768px]:text-[13.5px] max-[768px]:mb-3 max-[768px]:max-w-[95%] animate-fade-in delay-3">
+        Map out multi-stage business pipelines, execute customized code formulas, and branch submissions according to validation rules. Link Slack, Stripe, and webhook pipelines effortlessly.
+      </p>
+
+      <div class="flex justify-center mb-8 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mb-3 animate-fade-in delay-4">
+        <button class="open-login-btn bg-ink text-white px-6 py-2.5 rounded-buttons text-sm font-medium tracking-[-0.025em] border border-white/15 btn-primary-shadow transition-all duration-200 hover:bg-charcoal hover:-translate-y-[1px] cursor-pointer max-[768px]:w-full max-[768px]:py-3">Build Automations</button>
+      </div>
+
+      <div class="flex items-center justify-center gap-1.5 p-1 bg-white/5 border border-white/10 backdrop-blur-md rounded-full mb-6 max-[768px]:mb-3 animate-fade-in delay-4">
+        <span class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-ink">Interactive Workflows Preview</span>
+      </div>
+
+      <div class="w-full max-w-[720px] h-[260px] border border-soft-mist rounded-[12px] bg-white mockup-shadow overflow-hidden flex text-left max-[768px]:h-[170px] animate-fade-in delay-4">
+        
+        <div class="w-36 bg-[#fcfcfc] border-r border-soft-mist p-3.5 flex flex-col gap-2 max-[768px]:w-10 max-[768px]:p-1.5">
+          <div class="flex items-center gap-2 max-[768px]:justify-center">
+            <div class="w-3.5 h-3.5 bg-ink/10 rounded-sm"></div>
+            <div class="h-2 w-14 bg-ink/15 rounded-sm max-[768px]:hidden"></div>
+          </div>
+          <div class="w-full h-[1px] bg-soft-mist my-1"></div>
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center gap-2 p-1 bg-[#ededed] rounded-[4px] max-[768px]:justify-center">
+              <svg class="w-3.5 h-3.5 text-ink flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM18 18.75V15.75m0 3a2.25 2.25 0 01-2.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-3m3 13.5a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM9 5.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path></svg>
+              <div class="h-1.5 w-16 bg-ink/20 rounded-sm max-[768px]:hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 p-5 overflow-hidden flex flex-col bg-white max-[768px]:p-3 text-ink">
+          <div class="flex items-center justify-between border-b border-soft-mist pb-3 mb-3 max-[768px]:pb-2 max-[768px]:mb-2">
+            <div class="flex flex-col gap-1">
+              <div class="h-3 w-32 bg-ink/70 rounded-sm max-[768px]:w-20"></div>
+              <div class="h-1.5 w-44 bg-ash/40 rounded-sm max-[768px]:hidden"></div>
+            </div>
+            <div class="h-5 w-12 bg-ink/10 rounded-full max-[768px]:h-4 max-[768px]:w-8"></div>
+          </div>
+
+          <div class="flex-1 relative w-full h-full">
+            <div class="absolute inset-0 flex items-center justify-center gap-3 h-full w-full max-[768px]:gap-1">
+              <div class="flex items-center gap-1 max-[768px]:scale-90">
+                <div class="border border-soft-mist bg-[#fcfcfc] rounded-[6px] px-3 py-2 flex items-center gap-2 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                  <div class="w-4 h-4 rounded-full bg-emerald-500/10 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg></div>
+                  <div class="flex flex-col gap-0.5">
+                    <div class="text-[9px] font-bold text-ink leading-none">Form Submitted</div>
+                    <div class="text-[7px] text-ash">Contact Survey</div>
+                  </div>
+                </div>
+                <svg class="w-3.5 h-3.5 text-ash flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
+                <div class="border border-soft-mist bg-[#fcfcfc] rounded-[6px] px-3 py-2 flex items-center gap-2 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                  <div class="w-4 h-4 rounded-full bg-amber-500/10 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M12 9a3 3 0 100-6 3 3 0 000 6zm0 0a6 6 0 00-6 6M12 9a6 6 0 016 6"></path></svg></div>
+                  <div class="flex flex-col gap-0.5">
+                    <div class="text-[9px] font-bold text-ink leading-none">Condition</div>
+                    <div class="text-[7px] text-ash">Rating == Bad</div>
+                  </div>
+                </div>
+                <svg class="w-3.5 h-3.5 text-ash flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
+                <div class="border border-soft-mist bg-[#fcfcfc] rounded-[6px] px-3 py-2 flex items-center gap-2 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                  <div class="w-4 h-4 rounded-full bg-red-500/10 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path></svg></div>
+                  <div class="flex flex-col gap-0.5">
+                    <div class="text-[9px] font-bold text-ink leading-none">Slack Alert</div>
+                    <div class="text-[7px] text-ash">Notify Ops Team</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</Layout>
