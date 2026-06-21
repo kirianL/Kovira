@@ -1570,3 +1570,21 @@ h3 {
   margin-bottom: 20px;
 }
 
+/* 4. Additional mobile experience enhancements */
+.responsive-flex-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .responsive-flex-form {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+

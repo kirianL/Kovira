@@ -1170,7 +1170,7 @@ export default function SaaSApp() {
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <a href="/" target="_blank" className="btn btn-secondary" style={{ padding: "6px 10px", fontSize: 12, display: "flex", alignItems: "center", gap: 6 }}>
-              <Icon name="new-window-page" style={{ width: 12, height: 12 }} /> Ver Landing Page
+              <Icon name="new-window-page" style={{ width: 12, height: 12 }} /> <span className="hide-on-mobile">Ver Landing Page</span>
             </a>
             <button className="btn btn-secondary" style={{ padding: "6px 10px" }} onClick={() => alert("No tienes notificaciones pendientes.")}>
               <Icon name="bell" style={{ width: 12, height: 12 }} />
@@ -1822,7 +1822,7 @@ export default function SaaSApp() {
                   ))}
                 </select>
 
-                <div style={{ height: 24, width: 1, background: "var(--border-soft)", margin: "0 4px" }} />
+                <div className="hide-on-mobile" style={{ height: 24, width: 1, background: "var(--border-soft)", margin: "0 4px" }} />
 
                 <button className="btn btn-secondary" style={{ padding: "8px 12px", display: "flex", alignItems: "center", gap: 6 }} onClick={() => exportSubmissions("csv")}>
                   <i className="ti ti-file-text" /> Exportar CSV
@@ -2353,7 +2353,7 @@ export default function SaaSApp() {
                   ))}
                 </div>
 
-                <form onSubmit={inviteTeamMember} style={{ display: "flex", gap: 8 }}>
+                <form onSubmit={inviteTeamMember} className="responsive-flex-form">
                   <input
                     type="email"
                     className="form-input"
@@ -2421,7 +2421,7 @@ export default function SaaSApp() {
                   </table>
                 </div>
 
-                <form onSubmit={generateNewAPIKey} style={{ display: "flex", gap: 10, alignItems: "flex-end", maxWidth: 500 }}>
+                <form onSubmit={generateNewAPIKey} className="responsive-flex-form" style={{ maxWidth: 500 }}>
                   <div className="form-group" style={{ flex: 1 }}>
                     <label>Nombre de la nueva Clave</label>
                     <input
