@@ -2,6 +2,32 @@
 
 import { useState, useEffect, useMemo } from "react";
 
+// Notion/Linear style Icon loader from DESIGN.md
+function Icon({ name, className = "", style = {} }) {
+  return (
+    <span 
+      className={`inline-block ${className}`}
+      style={{
+        width: '16px',
+        height: '16px',
+        backgroundColor: 'currentColor',
+        maskImage: `url(/app/icons/${name}.svg)`,
+        maskPosition: '0 -32px', // 3rd style variant (Regular)
+        maskSize: '16px 48px',
+        WebkitMaskImage: `url(/app/icons/${name}.svg)`,
+        WebkitMaskPosition: '0 -32px',
+        WebkitMaskSize: '16px 48px',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        flexShrink: 0,
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        ...style
+      }}
+    />
+  );
+}
+
 export default function SaaSApp() {
   // Navigation & Workspace State
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -1024,8 +1050,10 @@ export default function SaaSApp() {
           ============================================================ */}
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div className="brand-mark">
-            <div style={{ width: 18, height: 18, borderRadius: 4, background: "#1A1A1A", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFF", fontSize: 9, fontWeight: 800 }}>K</div>
+          <div className="brand-mark" style={{ color: 'var(--color-ink)' }}>
+            <svg style={{ height: '20px', width: 'auto' }} viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M22.2782 6.3584C23.3828 6.3584 24.2782 7.25383 24.2782 8.3584V15.4716C24.3202 15.4824 24.3621 15.4936 24.4038 15.5052L28.96 7.61365L30.3071 8.39141C31.2636 8.94371 31.5914 10.1669 31.0391 11.1235L27.4822 17.2841C27.5129 17.3142 27.5433 17.3446 27.5734 17.3752L35.4668 12.818L36.2446 14.1652C36.7969 15.1218 36.4691 16.3449 35.5125 16.8972L29.3536 20.4531C29.3654 20.4956 29.3768 20.5382 29.3878 20.5811H38.5V22.1366C38.5 23.2412 37.6046 24.1366 36.5 24.1366H29.3878C29.377 24.1787 29.3658 24.2207 29.3542 24.2625L37.2446 28.818L36.4668 30.1652C35.9145 31.1218 34.6913 31.4495 33.7347 30.8973L27.5748 27.3409C27.5446 27.3717 27.5141 27.4022 27.4833 27.4324L32.0401 35.325L30.6931 36.1028C29.7365 36.6551 28.5133 36.3273 27.961 35.3708L24.4052 29.212C24.363 29.2237 24.3207 29.235 24.2782 29.2459V38.3584H22.7227C21.6181 38.3584 20.7227 37.463 20.7227 36.3584V29.2458C20.6802 29.2349 20.6379 29.2235 20.5958 29.2119L16.0392 37.1042L14.692 36.3264C13.7354 35.7742 13.4077 34.551 13.96 33.5944L17.5178 27.432C17.4868 27.4016 17.456 27.3708 17.4256 27.3398L9.53168 31.8973L8.75387 30.55C8.2016 29.5934 8.52936 28.3703 9.48594 27.818L15.6469 24.261C15.6355 24.2197 15.6244 24.1782 15.6137 24.1366H6.5V22.5811C6.5 21.4765 7.39543 20.5811 8.5 20.5811H15.6137C15.6246 20.5388 15.6358 20.4966 15.6475 20.4546L7.75391 15.8972L8.53169 14.5501C9.08397 13.5935 10.3071 13.2657 11.2637 13.818L17.427 17.3763C17.4573 17.3455 17.4879 17.3148 17.5188 17.2845L12.9609 9.39008L14.3081 8.61231C15.2647 8.06002 16.4879 8.38777 17.0401 9.34436L20.5972 15.5053C20.6388 15.4938 20.6807 15.4826 20.7227 15.4718V6.3584H22.2782ZM25.647 24.0166L25.5129 24.2489C25.2237 24.7087 24.8322 25.0977 24.3703 25.3838L24.1802 25.4935C23.6947 25.7542 23.1416 25.9053 22.554 25.914H22.4475C20.5083 25.8855 18.9452 24.3047 18.9452 22.3588C18.9452 20.3951 20.537 18.8032 22.5008 18.8032C23.1125 18.8032 23.6882 18.9577 24.1909 19.2298L24.3599 19.3274C24.8366 19.6204 25.239 20.0227 25.532 20.4994L25.6299 20.669C25.8909 21.1513 26.0436 21.7007 26.0556 22.2847V22.4329C26.0439 23.0041 25.8975 23.5421 25.647 24.0166Z" fill="currentColor"/>
+            </svg>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             {/* Workspace Selector Dropdown */}
@@ -1035,12 +1063,12 @@ export default function SaaSApp() {
                 setActiveWorkspace(e.target.value);
                 setActiveTab("dashboard");
               }}
-              style={{ width: "100%", border: "none", background: "none", fontSize: "14px", fontWeight: "700", color: "var(--text-primary)", cursor: "pointer", outline: "none" }}
+              style={{ width: "100%", border: "none", background: "none", fontSize: "14px", fontWeight: "700", color: "var(--color-ink)", cursor: "pointer", outline: "none" }}
             >
               <option value="personal">Mi Workspace</option>
               <option value="acme">Acme Corp</option>
             </select>
-            <div style={{ fontSize: 10, color: "var(--text-tertiary)", paddingLeft: 2 }}>{workspaceName}</div>
+            <div style={{ fontSize: 10, color: "var(--color-ash)", paddingLeft: 2 }}>{workspaceName}</div>
           </div>
         </div>
 
@@ -1048,28 +1076,28 @@ export default function SaaSApp() {
 
         {/* 03-ui-architecture.md Layout links */}
         <div className={`nav-item ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => setActiveTab("dashboard")}>
-          <div className="nav-icon"><i className="ti ti-layout-dashboard" /></div>
+          <div className="nav-icon"><Icon name="dashboard" /></div>
           Dashboard
         </div>
         <div className={`nav-item ${activeTab === "form-builder" ? "active" : ""}`} onClick={() => setActiveTab("form-builder")}>
-          <div className="nav-icon"><i className="ti ti-edit" /></div>
+          <div className="nav-icon"><Icon name="form" /></div>
           Form Builder
         </div>
         <div className={`nav-item ${activeTab === "submissions" ? "active" : ""}`} onClick={() => setActiveTab("submissions")}>
-          <div className="nav-icon"><i className="ti ti-database-import" /></div>
+          <div className="nav-icon"><Icon name="inbox" /></div>
           Submissions
           {submissions.filter(s => s.status === "pending").length > 0 && (
-            <span style={{ marginLeft: "auto", background: "#ef4444", color: "#fff", fontSize: 9, padding: "2px 6px", borderRadius: 99, fontWeight: 700 }}>
+            <span style={{ marginLeft: "auto", background: "var(--color-ink)", color: "var(--color-pure-paper)", fontSize: 9, padding: "2px 6px", borderRadius: 99, fontWeight: 700 }}>
               {submissions.filter(s => s.status === "pending").length}
             </span>
           )}
         </div>
         <div className={`nav-item ${activeTab === "workflows" ? "active" : ""}`} onClick={() => setActiveTab("workflows")}>
-          <div className="nav-icon"><i className="ti ti-git-branch" /></div>
+          <div className="nav-icon"><Icon name="flow" /></div>
           Workflows
         </div>
         <div className={`nav-item ${activeTab === "analytics" ? "active" : ""}`} onClick={() => setActiveTab("analytics")}>
-          <div className="nav-icon"><i className="ti ti-chart-bar" /></div>
+          <div className="nav-icon"><Icon name="chart-pie" /></div>
           Analytics
         </div>
 
@@ -1077,7 +1105,7 @@ export default function SaaSApp() {
         <div className="nav-section-label">Configuración</div>
 
         <div className={`nav-item ${activeTab === "settings" ? "active" : ""}`} onClick={() => setActiveTab("settings")}>
-          <div className="nav-icon"><i className="ti ti-settings" /></div>
+          <div className="nav-icon"><Icon name="cog" /></div>
           Workspace &amp; API
         </div>
 
@@ -1101,17 +1129,17 @@ export default function SaaSApp() {
         <header className="topbar">
           <div className="breadcrumb" style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <span>Workspaces</span> 
-            <i className="ti ti-chevron-right" style={{ fontSize: 10 }} /> 
+            <Icon name="chevron-right" style={{ width: 10, height: 10, color: 'var(--color-ash)' }} /> 
             <span>{workspaceName}</span> 
-            <i className="ti ti-chevron-right" style={{ fontSize: 10 }} /> 
+            <Icon name="chevron-right" style={{ width: 10, height: 10, color: 'var(--color-ash)' }} /> 
             <b style={{ textTransform: "capitalize" }}>{activeTab.replace("-", " ")}</b>
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <a href="/" target="_blank" className="btn btn-secondary" style={{ padding: "6px 10px", fontSize: 12, display: "flex", alignItems: "center", gap: 6 }}>
-              <i className="ti ti-external-link" /> Ver Landing Page
+              <Icon name="new-window-page" style={{ width: 12, height: 12 }} /> Ver Landing Page
             </a>
             <button className="btn btn-secondary" style={{ padding: "6px 10px" }} onClick={() => alert("No tienes notificaciones pendientes.")}>
-              <i className="ti ti-bell" />
+              <Icon name="bell" style={{ width: 12, height: 12 }} />
             </button>
             <div className="avatar" style={{ width: 28, height: 28, fontSize: 10 }}>KL</div>
           </div>
@@ -1133,79 +1161,79 @@ export default function SaaSApp() {
             <div className="metric-grid">
               <div className="metric-card">
                 <div className="metric-head">
-                  <div className="metric-icon" style={{ borderColor: "#6366f1" }}><i className="ti ti-forms" style={{ color: "#6366f1" }} /></div>
+                  <div className="metric-icon"><Icon name="form" style={{ width: 12, height: 12, color: 'var(--color-slate)' }} /></div>
                   Total Forms
                 </div>
                 <div className="metric-val">{forms.length}</div>
-                <div className="metric-delta" style={{ color: "var(--text-tertiary)" }}>Creados en workspace</div>
+                <div className="metric-delta" style={{ color: "var(--color-ash)" }}>Creados en workspace</div>
               </div>
 
               <div className="metric-card">
                 <div className="metric-head">
-                  <div className="metric-icon" style={{ borderColor: "#22c55e" }}><i className="ti ti-database" style={{ color: "#22c55e" }} /></div>
+                  <div className="metric-icon"><Icon name="inbox" style={{ width: 12, height: 12, color: 'var(--color-slate)' }} /></div>
                   Submissions
                 </div>
                 <div className="metric-val">{submissions.length}</div>
-                <div className="metric-delta" style={{ color: "#22c55e" }}>
-                  <i className="ti ti-trending-up" /> +{submissions.length} totales
+                <div className="metric-delta" style={{ color: "var(--color-slate)" }}>
+                  +{submissions.length} totales
                 </div>
               </div>
 
               <div className="metric-card">
                 <div className="metric-head">
-                  <div className="metric-icon" style={{ borderColor: "#f59e0b" }}><i className="ti ti-git-branch" style={{ color: "#f59e0b" }} /></div>
+                  <div className="metric-icon"><Icon name="flow" style={{ width: 12, height: 12, color: 'var(--color-slate)' }} /></div>
                   Workflows
                 </div>
                 <div className="metric-val">{workflows.filter(w => w.active).length}</div>
-                <div className="metric-delta" style={{ color: "#f59e0b" }}>
+                <div className="metric-delta" style={{ color: "var(--color-ash)" }}>
                   Activos e instrumentados
                 </div>
               </div>
 
               <div className="metric-card">
                 <div className="metric-head">
-                  <div className="metric-icon" style={{ borderColor: "#3b82f6" }}><i className="ti ti-chart-pie" style={{ color: "#3b82f6" }} /></div>
+                  <div className="metric-icon"><Icon name="chart-pie" style={{ width: 12, height: 12, color: 'var(--color-slate)' }} /></div>
                   Conversión
                 </div>
                 <div className="metric-val">{overallConversion}%</div>
-                <div className="metric-delta" style={{ color: "var(--text-tertiary)" }}>De vistas a registros</div>
+                <div className="metric-delta" style={{ color: "var(--color-ash)" }}>De vistas a registros</div>
               </div>
             </div>
 
             {/* Layout grid for activity and actions */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 20, marginTop: 24 }}>
               {/* Quick Actions (03-ui-architecture.md) */}
-              <div style={{ background: "var(--bg-surface)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-lg)", padding: "20px", boxShadow: "var(--shadow-card)" }}>
-                <h4 style={{ fontSize: 14, fontWeight: 700, borderBottom: "1px solid var(--border-hairline)", paddingBottom: 10, marginBottom: 16 }}>
+              <div style={{ background: "var(--color-pure-paper)", border: "1px solid var(--color-soft-mist)", borderRadius: "var(--radius-cards)", padding: "20px", boxShadow: "var(--shadow-subtle)" }}>
+                <h4 style={{ fontSize: 14, fontWeight: 700, borderBottom: "1px solid var(--color-soft-mist)", paddingBottom: 10, marginBottom: 16 }}>
                   Acciones Rápidas
                 </h4>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <button className="btn btn-primary" style={{ justifyContent: "center" }} onClick={createNewForm}>
-                    <i className="ti ti-plus" /> Crear Nuevo Formulario
+                    <Icon name="plus" style={{ width: 12, height: 12, color: 'var(--color-pure-paper)' }} /> Crear Nuevo Formulario
                   </button>
                   <button className="btn btn-secondary" style={{ justifyContent: "center" }} onClick={() => setActiveTab("submissions")}>
-                    <i className="ti ti-database" /> Examinar Envíos
+                    <Icon name="inbox" style={{ width: 12, height: 12 }} /> Examinar Envíos
                   </button>
                   <button className="btn btn-secondary" style={{ justifyContent: "center" }} onClick={createWorkflow}>
-                    <i className="ti ti-git-fork" /> Configurar Automatización
+                    <Icon name="flow" style={{ width: 12, height: 12 }} /> Configurar Automatización
                   </button>
                 </div>
                 <div className="sidebar-divider" style={{ margin: "20px -20px" }} />
                 <div>
-                  <h5 style={{ fontSize: 12, fontWeight: 700, color: "var(--text-secondary)", marginBottom: 8 }}>Formulario Activo</h5>
+                  <h5 style={{ fontSize: 12, fontWeight: 700, color: "var(--color-ash)", marginBottom: 8 }}>Formulario Activo</h5>
                   {activeForm ? (
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontSize: 13, fontWeight: 600 }}>{activeForm.name}</span>
                       <button className="btn btn-secondary" style={{ padding: "4px 8px", fontSize: 11 }} onClick={() => setActiveTab("form-builder")}>Editar</button>
                     </div>
                   ) : (
-                    <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>No hay formularios activos.</span>
+                    <span style={{ fontSize: 12, color: "var(--color-ash)" }}>No hay formularios activos.</span>
                   )}
                 </div>
               </div>
 
               {/* Activity Feed */}
-              <div style={{ background: "var(--bg-surface)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-lg)", padding: "20px", boxShadow: "var(--shadow-card)" }}>
+              <div style={{ background: "var(--color-pure-paper)", border: "1px solid var(--color-soft-mist)", borderRadius: "var(--radius-cards)", padding: "20px", boxShadow: "var(--shadow-subtle)" }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, borderBottom: "1px solid var(--border-hairline)", paddingBottom: 10, marginBottom: 16 }}>
                   Bitácora de Actividad Reciente
                 </h4>
