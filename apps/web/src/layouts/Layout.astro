@@ -14,7 +14,7 @@ const { title, activeTab } = Astro.props;
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
-  <meta name="description" content="Kovira is a multi-tenant SaaS platform for building forms, data collection systems, workflows and automations." />
+  <meta name="description" content="Kovira is a multi-tenant SaaS platform for building forms, data collection systems and automations." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <ClientRouter />
@@ -34,7 +34,7 @@ const { title, activeTab } = Astro.props;
       <ul class="flex items-center gap-8 justify-self-center max-[768px]:hidden">
         <li><a href="/forms" class={`text-sm font-medium transition-colors duration-200 hover:text-white ${activeTab === 'forms' ? 'text-white font-bold underline underline-offset-4' : 'text-white/70'}`}>Forms</a></li>
         <li><a href="/submissions" class={`text-sm font-medium transition-colors duration-200 hover:text-white ${activeTab === 'submissions' ? 'text-white font-bold underline underline-offset-4' : 'text-white/70'}`}>Submissions</a></li>
-        <li><a href="/workflows" class={`text-sm font-medium transition-colors duration-200 hover:text-white ${activeTab === 'workflows' ? 'text-white font-bold underline underline-offset-4' : 'text-white/70'}`}>Workflows</a></li>
+        <li><a href="/pricing" class={`text-sm font-medium transition-colors duration-200 hover:text-white ${activeTab === 'pricing' ? 'text-white font-bold underline underline-offset-4' : 'text-white/70'}`}>Pricing</a></li>
         <li><a href="/analytics" class={`text-sm font-medium transition-colors duration-200 hover:text-white ${activeTab === 'analytics' ? 'text-white font-bold underline underline-offset-4' : 'text-white/70'}`}>Analytics</a></li>
       </ul>
 
@@ -66,17 +66,18 @@ const { title, activeTab } = Astro.props;
     <div transition:name="mobile-dock" transition:animate="none" class="hidden max-[768px]:flex fixed bottom-6 left-1/2 -translate-x-1/2 items-center justify-center gap-6 px-6 py-2.5 bg-[#090a16]/80 border border-white/10 backdrop-blur-md rounded-full z-40 shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
       <a href="/forms" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'forms' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Forms</a>
       <a href="/submissions" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'submissions' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Submissions</a>
-      <a href="/workflows" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'workflows' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Workflows</a>
+      <a href="/pricing" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'pricing' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Pricing</a>
       <a href="/analytics" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'analytics' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Analytics</a>
     </div>
 
-    <div transition:name="footer" transition:animate="none" class="w-full flex flex-col items-center gap-3 pb-8 z-5 relative max-[768px]:pb-3 max-[768px]:gap-1">
+    <div transition:name="footer" transition:animate="none" class="w-full flex flex-col items-center gap-2 pb-8 z-5 relative max-[768px]:pb-3">
       <div class="text-[11px] text-white/30 tracking-wider text-center max-[768px]:mt-2">
         <span>© 2026 Kovira. All rights reserved.</span>
         <a href="/app" class="mx-2 transition-colors duration-200 hover:text-white/60">Platform</a>
         <a href="/app?tab=settings" class="mx-2 transition-colors duration-200 hover:text-white/60">API Keys</a>
         <a href="/app?tab=settings" class="mx-2 transition-colors duration-200 hover:text-white/60">Security</a>
       </div>
+      <div class="text-[11px] text-white/20 tracking-wide text-center">Developed by Kirian with <span class="text-white/30">♥</span></div>
     </div>
   </div>
 
@@ -311,7 +312,7 @@ const { title, activeTab } = Astro.props;
       });
 
       document.addEventListener('astro:after-swap', () => {
-        document.body.classList.remove('is-initial-load');
+        document.body.classList.add('is-initial-load');
       });
     }
   </script>
