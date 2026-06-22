@@ -196,6 +196,9 @@ const { title, activeTab } = Astro.props;
   </div>
 
   <script>
+    import SplitType from 'split-type';
+    import { animate, stagger } from 'motion';
+
     const globalWindow = window as any;
     if (!globalWindow.koviraInitialized) {
       globalWindow.koviraInitialized = true;
@@ -310,9 +313,53 @@ const { title, activeTab } = Astro.props;
           triggerLoadingRedirect('Signing you in...');
         }
       });
-
-
     }
+
+    const runTextReveal = () => {
+      const targets = document.querySelectorAll('.reveal-text');
+      targets.forEach(target => {
+        (target as HTMLElement).style.opacity = '1';
+        const split = new SplitType(target as HTMLElement, { types: 'lines,words' });
+        if (split.words && split.words.length > 0) {
+          split.words.forEach(word => {
+            word.style.display = 'inline-block';
+            word.style.position = 'relative';
+            word.style.opacity = '0';
+            word.style.transform = 'translateY(10px)';
+          });
+          animate(
+            split.words,
+            { opacity: [0, 1], y: [10, 0] },
+            { 
+              duration: 0.38, 
+              delay: stagger(0.04), 
+              easing: [0.16, 1, 0.3, 1] 
+            }
+          );
+        }
+      });
+
+      const fadeElements = document.querySelectorAll('.animate-fade-in');
+      if (fadeElements.length > 0) {
+        fadeElements.forEach(el => {
+          (el as HTMLElement).style.opacity = '0';
+          (el as HTMLElement).style.transform = 'translateY(8px)';
+        });
+        animate(
+          fadeElements,
+          { opacity: [0, 1], y: [8, 0] },
+          { 
+            duration: 0.35, 
+            delay: stagger(0.045, { startDelay: 0.08 }), 
+            easing: [0.16, 1, 0.3, 1] 
+          }
+        );
+      }
+    };
+
+    document.addEventListener('astro:page-load', () => {
+      runTextReveal();
+    });
   </script>
 
 </body>
