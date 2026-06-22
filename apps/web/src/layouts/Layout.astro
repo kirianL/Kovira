@@ -59,7 +59,7 @@ const { title, activeTab } = Astro.props;
       <path d="M 220 550 Q 720 350 1220 550" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-dasharray="4 8" />
     </svg>
 
-    <main transition:animate="fade" class="flex-1 flex flex-col w-full min-h-0 relative z-5">
+    <main transition:animate="none" class="flex-1 flex flex-col w-full min-h-0 relative z-5 overflow-y-auto">
       <slot />
     </main>
 
@@ -311,8 +311,21 @@ const { title, activeTab } = Astro.props;
         }
       });
 
+      const handleInitialLoadClass = () => {
+        if (globalWindow.koviraVisited) {
+          document.body.classList.remove('is-initial-load');
+        } else {
+          globalWindow.koviraVisited = true;
+          setTimeout(() => {
+            document.body.classList.remove('is-initial-load');
+          }, 600);
+        }
+      };
+
+      handleInitialLoadClass();
+
       document.addEventListener('astro:after-swap', () => {
-        document.body.classList.add('is-initial-load');
+        handleInitialLoadClass();
       });
     }
   </script>

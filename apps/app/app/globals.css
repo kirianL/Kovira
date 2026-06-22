@@ -1176,24 +1176,24 @@ h3 {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.02) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    background: transparent !important;
+    border: none !important;
     cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    color: var(--color-ink);
-    margin-right: 10px;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-buttons);
+    color: var(--color-ash);
+    margin-right: 8px;
+    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .mobile-menu-toggle:hover {
-    background: rgba(0, 0, 0, 0.05) !important;
-    transform: scale(1.03);
+    background: var(--color-soft-mist) !important;
+    color: var(--color-ink);
   }
 
   .mobile-menu-toggle:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
 
   .mobile-menu-close {
