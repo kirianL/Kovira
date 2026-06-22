@@ -75,39 +75,31 @@ body {
   line-height: 1.25;
 }
 
-.is-initial-load .reveal-text {
+.reveal-text {
   display: inline-block;
   opacity: 0;
-  transform: translateY(8px);
-  animation: slide-up-reveal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateY(6px);
+  animation: slide-up-reveal 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
-.is-initial-load .animate-fade-in {
+.animate-fade-in {
   opacity: 0;
-  animation: fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fade-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity;
 }
 
-.is-initial-load .delay-1 {
-  animation-delay: 0.02s;
+.delay-1 {
+  animation-delay: 0.015s;
 }
-.is-initial-load .delay-2 {
-  animation-delay: 0.06s;
+.delay-2 {
+  animation-delay: 0.04s;
 }
-.is-initial-load .delay-3 {
-  animation-delay: 0.1s;
+.delay-3 {
+  animation-delay: 0.065s;
 }
-.is-initial-load .delay-4 {
-  animation-delay: 0.14s;
-}
-
-body:not(.is-initial-load) .reveal-text {
-  display: inline-block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-body:not(.is-initial-load) .animate-fade-in {
-  opacity: 1;
+.delay-4 {
+  animation-delay: 0.09s;
 }
 
 @keyframes slide-up-reveal {
@@ -121,6 +113,24 @@ body:not(.is-initial-load) .animate-fade-in {
   to {
     opacity: 1;
   }
+}
+
+/* Custom Snappy View Transitions for main-content */
+::view-transition-old(main-content) {
+  animation: fade-out-main 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+::view-transition-new(main-content) {
+  animation: fade-in-main 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fade-out-main {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in-main {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 #landing-view {
