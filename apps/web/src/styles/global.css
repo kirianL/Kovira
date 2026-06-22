@@ -89,7 +89,7 @@ body {
   animation: fade-out-main 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 ::view-transition-new(main-content) {
-  animation: slide-up-main 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: slide-up-main 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fade-out-main {
@@ -101,7 +101,7 @@ body {
 @keyframes slide-up-main {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
