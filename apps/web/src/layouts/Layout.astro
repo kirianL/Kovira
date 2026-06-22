@@ -296,6 +296,14 @@ const { title, activeTab } = Astro.props;
           const id = openLoginBtn.id;
           const text = openLoginBtn.textContent ? openLoginBtn.textContent.trim().toLowerCase() : '';
 
+          // If the mobile menu overlay is open, close it so it doesn't cover the login modal
+          const menu = document.getElementById('mobile-menu-overlay');
+          if (menu && menu.classList.contains('translate-x-0')) {
+            menu.classList.remove('translate-x-0', 'pointer-events-auto');
+            menu.classList.add('translate-x-full', 'pointer-events-none');
+            document.body.classList.remove('mobile-menu-active');
+          }
+
           if (id === 'nav-signin-btn') {
             selectLoginForm();
           } else if (id === 'nav-getstarted-btn') {
