@@ -273,9 +273,6 @@ body.login-active #login-right {
 
 /* Optimizations for shorter viewports (laptops and small screens) */
 @media screen and (max-height: 820px) {
-  nav {
-    height: 3rem !important; /* Shrink navigation bar height */
-  }
   .relative.z-5.flex-1 {
     padding-top: 0.25rem !important;
     padding-bottom: 0.5rem !important;
@@ -304,9 +301,6 @@ body.login-active #login-right {
 }
 
 @media screen and (max-height: 720px) {
-  nav {
-    height: 2.75rem !important;
-  }
   .relative.z-5.flex-1 {
     padding-top: 0.15rem !important;
     padding-bottom: 0.25rem !important;
