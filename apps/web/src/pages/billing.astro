@@ -2,116 +2,185 @@
 import Layout from '../layouts/Layout.astro';
 ---
 <Layout title="Billing & Subscription — Kovira" activeTab="billing">
-  <div class="relative z-5 flex-1 flex flex-col items-center px-6 py-10 max-w-[900px] mx-auto w-full max-[768px]:px-5 max-[768px]:py-6 overflow-y-auto max-[768px]:justify-start">
+  <div class="relative z-5 flex-1 flex flex-col items-center px-6 py-12 max-w-[840px] mx-auto w-full max-[768px]:px-4 max-[768px]:py-6 overflow-y-auto max-[768px]:justify-start">
     
-    <!-- Title Section -->
-    <div class="w-full text-left mb-8">
-      <h1 class="text-[28px] font-extrabold leading-tight tracking-[-0.025em] text-white mb-2">
-        <span class="reveal-wrapper">
-          <span class="reveal-text delay-1">Billing & Subscription</span>
-        </span>
-      </h1>
-      <p class="text-xs text-white/60 animate-fade-in delay-2">
-        Manage your subscription plan, update payment methods, and view your billing history.
-      </p>
-    </div>
-
-    <div class="w-full flex flex-col gap-6 text-left animate-fade-in delay-3">
+    <!-- White Paper Canvas Container -->
+    <div class="w-full bg-white rounded-[18px] border border-[#ededed] shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-8 max-[768px]:p-5 flex flex-col gap-6 text-[#262626] font-sans">
       
-      <!-- Top Grid: Subscription & Payment Details -->
-      <div class="grid grid-cols-2 gap-4 max-[768px]:grid-cols-1">
+      <!-- Title Section -->
+      <div class="w-full text-left pb-4 border-b border-[#ededed] flex flex-col gap-2">
+        <h1 class="text-[32px] max-[768px]:text-[24px] font-extrabold leading-none tracking-[-0.03em] text-black">Billing & Subscription</h1>
+        <p class="text-sm max-[768px]:text-xs text-[#686868] leading-relaxed">
+          Manage your subscription plan, update payment methods, and view your billing history.
+        </p>
+      </div>
+
+      <div class="w-full flex flex-col gap-8 text-left">
         
-        <!-- Current Plan Card -->
-        <div class="p-5 rounded-cards border border-white/10 bg-[#0d0e1e] flex flex-col justify-between">
-          <div>
-            <div class="text-[10px] font-bold text-ash uppercase tracking-wider mb-2">Current Plan</div>
-            <div class="flex items-baseline gap-2 mb-2">
-              <span class="text-xl font-bold text-white">Pro Plan</span>
-              <span class="text-xs text-white/60">$29.00 / month</span>
+        <!-- Top Grid: Subscription & Payment Details (Notion-style Light Cards) -->
+        <div class="grid grid-cols-2 gap-5 max-[768px]:grid-cols-1">
+          
+          <!-- Current Plan Card -->
+          <div class="p-6 rounded-[14px] border border-[#ededed] bg-[#fbfbfb] text-[#262626] flex flex-col justify-between shadow-subtle min-h-[230px] max-[768px]:p-5">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-[#686868] uppercase tracking-wider mb-3">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"></path>
+                </svg>
+                Current Plan
+              </div>
+              <div class="flex items-baseline gap-2 mb-2">
+                <span class="text-[22px] font-extrabold text-black tracking-tight">Pro Plan</span>
+                <span class="text-xs text-[#686868] font-medium">$29.00 / month</span>
+              </div>
+              <p class="text-sm text-[#515151] leading-relaxed mb-4">
+                Your next billing date is <strong class="text-black font-semibold">July 20, 2026</strong>. Utilizing 4 of 5 team members.
+              </p>
             </div>
-            <p class="text-xs text-white/50 leading-relaxed mb-4">
-              Your next billing date is July 20, 2026. You are currently utilizing 4 of 5 team members.
-            </p>
+            <div class="flex items-center gap-3">
+              <button class="bg-[#262626] text-white border border-[#262626] px-4 py-2 rounded-buttons text-xs font-semibold hover:bg-black transition-all cursor-pointer shadow-sm">
+                Change Plan
+              </button>
+              <button class="bg-transparent text-[#686868] border border-[#ededed] px-4 py-2 rounded-buttons text-xs font-medium hover:text-[#262626] hover:border-ash transition-all cursor-pointer">
+                Cancel
+              </button>
+            </div>
           </div>
-          <div class="flex items-center gap-3 mt-2">
-            <button class="bg-[#262626] text-white border border-white/15 px-4 py-2 rounded-buttons text-xs font-semibold hover:bg-[#171717] transition-all cursor-pointer btn-primary-shadow">
-              Change Plan
-            </button>
-            <button class="bg-transparent text-white/50 border border-white/10 px-4 py-2 rounded-buttons text-xs font-medium hover:text-white hover:border-white/20 transition-all cursor-pointer">
-              Cancel
-            </button>
+
+          <!-- Payment Method Card -->
+          <div class="p-6 rounded-[14px] border border-[#ededed] bg-[#fbfbfb] text-[#262626] flex flex-col justify-between shadow-subtle min-h-[230px] max-[768px]:p-5">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-[#686868] uppercase tracking-wider mb-3">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"></path>
+                </svg>
+                Payment Method
+              </div>
+              <div class="flex items-center gap-3 mb-3.5">
+                <!-- Card Brand Logo Icon Container -->
+                <div id="card-brand-logo-container" class="w-11 h-7 bg-white rounded border border-[#ededed] flex items-center justify-center shadow-sm">
+                  <span id="active-card-brand-text" class="text-[9px] font-black text-black tracking-wider">VISA</span>
+                </div>
+                <div>
+                  <div id="active-card-name" class="text-sm font-bold text-black">Visa ending in 4242</div>
+                  <div id="active-card-expiry" class="text-xs text-[#686868] font-mono">Expires 12/28</div>
+                </div>
+              </div>
+              <p class="text-sm text-[#515151] leading-relaxed mb-4">
+                Billing statement descriptor reads as <strong class="text-black font-semibold">"KOVIRA* PLATFORM"</strong>.
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="open-payment-modal-btn" class="bg-transparent text-[#262626] border border-[#ededed] px-4 py-2 rounded-buttons text-xs font-semibold hover:border-ash transition-all cursor-pointer flex items-center gap-1.5 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
+                </svg>
+                Update Payment Method
+              </button>
+            </div>
           </div>
+
         </div>
 
-        <!-- Payment Method Card -->
-        <div class="p-5 rounded-cards border border-white/10 bg-[#0d0e1e] flex flex-col justify-between">
-          <div>
-            <div class="text-[10px] font-bold text-ash uppercase tracking-wider mb-2">Payment Details</div>
-            <div class="flex items-center gap-3 mb-3">
-              <!-- Card Brand Logo Icon Container -->
-              <div id="card-brand-logo-container" class="w-10 h-6 bg-white/5 rounded border border-white/10 flex items-center justify-center">
-                <span id="active-card-brand-text" class="text-[9px] font-extrabold text-white tracking-widest">VISA</span>
+        <!-- Bottom: Invoice History (White Card Table) -->
+        <div class="w-full">
+          <div class="flex items-center gap-2 mb-4">
+            <h2 class="text-sm font-bold text-black uppercase tracking-wider">Billing History</h2>
+          </div>
+          
+          <!-- Desktop Table view -->
+          <div class="w-full border border-[#ededed] rounded-[14px] bg-white text-[#262626] shadow-subtle overflow-hidden max-[768px]:hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#ededed] text-[10px] text-[#686868] uppercase font-bold tracking-wider bg-[#fbfbfb]">
+                  <th class="px-6 py-4">Invoice Number</th>
+                  <th class="px-6 py-4">Billing Date</th>
+                  <th class="px-6 py-4">Amount</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm">
+                <tr class="border-b border-[#ededed] hover:bg-[#fcfcfc] transition-colors">
+                  <td class="px-6 py-4 font-mono text-black font-semibold">RNY-05212026-0077</td>
+                  <td class="px-6 py-4 text-[#686868]">May 21, 2026</td>
+                  <td class="px-6 py-4 text-black font-semibold font-mono">$29.00</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#ecfdf5] text-emerald-700">Paid</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="view-invoice-btn text-[#262626] hover:text-black font-bold underline underline-offset-4 cursor-pointer bg-transparent border-none p-0 flex items-center gap-1 ml-auto" data-invoice="RNY-05212026-0077">
+                      <span>View Invoice</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="border-b border-[#ededed] hover:bg-[#fcfcfc] transition-colors">
+                  <td class="px-6 py-4 font-mono text-black font-semibold">RNY-04212026-0051</td>
+                  <td class="px-6 py-4 text-[#686868]">Apr 21, 2026</td>
+                  <td class="px-6 py-4 text-black font-semibold font-mono">$29.00</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#ecfdf5] text-emerald-700">Paid</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="view-invoice-btn text-[#262626] hover:text-black font-bold underline underline-offset-4 cursor-pointer bg-transparent border-none p-0 flex items-center gap-1 ml-auto" data-invoice="RNY-04212026-0051">
+                      <span>View Invoice</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-[#fcfcfc] transition-colors">
+                  <td class="px-6 py-4 font-mono text-black font-semibold">RNY-03212026-0024</td>
+                  <td class="px-6 py-4 text-[#686868]">Mar 21, 2026</td>
+                  <td class="px-6 py-4 text-black font-semibold font-mono">$29.00</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#ecfdf5] text-emerald-700">Paid</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="view-invoice-btn text-[#262626] hover:text-black font-bold underline underline-offset-4 cursor-pointer bg-transparent border-none p-0 flex items-center gap-1 ml-auto" data-invoice="RNY-03212026-0024">
+                      <span>View Invoice</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Responsive Card List view on Mobile (extremely readable) -->
+          <div class="hidden max-[768px]:flex flex-col gap-3 w-full">
+            <div class="p-4.5 rounded-[14px] border border-[#ededed] bg-[#fbfbfb] text-[#262626] flex items-center justify-between shadow-subtle">
+              <div class="flex flex-col gap-1.5">
+                <span class="font-mono text-xs font-bold text-black">RNY-05212026-0077</span>
+                <span class="text-xs text-[#686868]">May 21, 2026 • <strong class="text-black font-semibold font-mono">$29.00</strong></span>
               </div>
-              <div>
-                <div id="active-card-name" class="text-xs font-semibold text-white">Visa ending in 4242</div>
-                <div id="active-card-expiry" class="text-[10px] text-white/50 font-mono">Expires 12/28</div>
-              </div>
+              <button class="view-invoice-btn bg-transparent border border-[#ededed] px-3.5 py-2 rounded-buttons text-xs font-bold text-[#262626] hover:border-ash cursor-pointer shadow-sm" data-invoice="RNY-05212026-0077">View</button>
             </div>
-            <p class="text-xs text-white/50 leading-relaxed mb-4">
-              Charges appear as "KOVIRA* PLATFORM" on your statement.
-            </p>
+            <div class="p-4.5 rounded-[14px] border border-[#ededed] bg-[#fbfbfb] text-[#262626] flex items-center justify-between shadow-subtle">
+              <div class="flex flex-col gap-1.5">
+                <span class="font-mono text-xs font-bold text-black">RNY-04212026-0051</span>
+                <span class="text-xs text-[#686868]">Apr 21, 2026 • <strong class="text-black font-semibold font-mono">$29.00</strong></span>
+              </div>
+              <button class="view-invoice-btn bg-transparent border border-[#ededed] px-3.5 py-2 rounded-buttons text-xs font-bold text-[#262626] hover:border-ash cursor-pointer shadow-sm" data-invoice="RNY-04212026-0051">View</button>
+            </div>
+            <div class="p-4.5 rounded-[14px] border border-[#ededed] bg-[#fbfbfb] text-[#262626] flex items-center justify-between shadow-subtle">
+              <div class="flex flex-col gap-1.5">
+                <span class="font-mono text-xs font-bold text-black">RNY-03212026-0024</span>
+                <span class="text-xs text-[#686868]">Mar 21, 2026 • <strong class="text-black font-semibold font-mono">$29.00</strong></span>
+              </div>
+              <button class="view-invoice-btn bg-transparent border border-[#ededed] px-3.5 py-2 rounded-buttons text-xs font-bold text-[#262626] hover:border-ash cursor-pointer shadow-sm" data-invoice="RNY-03212026-0024">View</button>
+            </div>
           </div>
-          <div class="flex items-center gap-2 mt-2">
-            <button id="open-payment-modal-btn" class="bg-transparent text-white/80 border border-white/10 px-4 py-2 rounded-buttons text-xs font-medium hover:text-white hover:border-white/20 transition-all cursor-pointer">
-              Update Payment Method
-            </button>
-          </div>
+
         </div>
 
       </div>
-
-      <!-- Bottom: Invoice History Table -->
-      <div class="mt-4">
-        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Billing History</h2>
-        
-        <div class="w-full overflow-x-auto border border-white/10 rounded-cards bg-[#0d0e1e]">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-white/10 text-[10px] text-ash uppercase font-bold tracking-wider">
-                <th class="px-5 py-3">Invoice Number</th>
-                <th class="px-5 py-3">Billing Date</th>
-                <th class="px-5 py-3">Amount</th>
-                <th class="px-5 py-3">Status</th>
-                <th class="px-5 py-3 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody class="text-xs text-white/80">
-              <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                <td class="px-5 py-3.5 font-mono text-white/90">RNY-05212026-0077</td>
-                <td class="px-5 py-3.5">May 21, 2026</td>
-                <td class="px-5 py-3.5">$29.00</td>
-                <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span></td>
-                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer bg-transparent border-none p-0" data-invoice="RNY-05212026-0077">View Invoice</button></td>
-              </tr>
-              <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                <td class="px-5 py-3.5 font-mono text-white/90">RNY-04212026-0051</td>
-                <td class="px-5 py-3.5">Apr 21, 2026</td>
-                <td class="px-5 py-3.5">$29.00</td>
-                <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span></td>
-                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer bg-transparent border-none p-0" data-invoice="RNY-04212026-0051">View Invoice</button></td>
-              </tr>
-              <tr class="hover:bg-white/5 transition-colors">
-                <td class="px-5 py-3.5 font-mono text-white/90">RNY-03212026-0024</td>
-                <td class="px-5 py-3.5">Mar 21, 2026</td>
-                <td class="px-5 py-3.5">$29.00</td>
-                <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span></td>
-                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer bg-transparent border-none p-0" data-invoice="RNY-03212026-0024">View Invoice</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -119,9 +188,9 @@ import Layout from '../layouts/Layout.astro';
   <div id="invoice-modal-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-6 hidden pointer-events-none opacity-0 transition-opacity duration-200">
     <div id="invoice-modal-content" class="bg-white rounded-[14px] w-full max-w-[620px] max-h-[90vh] overflow-y-auto shadow-2xl relative pointer-events-auto p-8 flex flex-col gap-6 text-[#262626] font-sans opacity-0 scale-[0.96] translate-y-4">
       
-      <!-- Close Button -->
-      <button id="close-invoice-modal-btn" class="absolute top-4 right-4 text-ash hover:text-ink cursor-pointer bg-transparent border-none p-1" aria-label="Close invoice">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+      <!-- Close Button (Floating White Circle with Shadow to prevent overlaps) -->
+      <button id="close-invoice-modal-btn" class="absolute top-4 right-4 text-[#686868] hover:text-[#262626] cursor-pointer bg-white border border-[#ededed] w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all z-20" aria-label="Close invoice">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
 
       <!-- Invoice Artwork Header -->
@@ -237,14 +306,14 @@ import Layout from '../layouts/Layout.astro';
   <div id="payment-modal-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-6 hidden pointer-events-none opacity-0 transition-opacity duration-200">
     <div id="payment-modal-content" class="bg-white rounded-[14px] w-full max-w-[420px] shadow-2xl relative pointer-events-auto p-8 flex flex-col gap-5 text-[#262626] font-sans opacity-0 scale-[0.96] translate-y-4">
       
-      <!-- Close Button -->
-      <button id="close-payment-modal-btn" class="absolute top-4 right-4 text-ash hover:text-ink cursor-pointer bg-transparent border-none p-1" aria-label="Close form">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+      <!-- Close Button (Floating White Circle with Shadow to prevent overlaps) -->
+      <button id="close-payment-modal-btn" class="absolute top-4 right-4 text-[#686868] hover:text-[#262626] cursor-pointer bg-white border border-[#ededed] w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all z-20" aria-label="Close form">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
 
       <div>
         <h3 class="text-lg font-bold text-black tracking-tight mb-1">Update Payment Method</h3>
-        <p class="text-xs text-ash leading-relaxed">Enter your billing information below to link a new card.</p>
+        <p class="text-xs text-[#686868] leading-relaxed">Enter your billing information below to link a new card.</p>
       </div>
 
       <!-- Supported Cards Row -->
