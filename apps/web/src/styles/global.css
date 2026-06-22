@@ -270,3 +270,56 @@ body.login-active #login-right {
     font-size: 16px !important;
   }
 }
+
+/* Optimizations for shorter viewports (laptops and small screens) */
+@media screen and (max-height: 820px) {
+  .relative.z-5.flex-1 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  h1 {
+    margin-bottom: 0.5rem !important;
+  }
+  p {
+    margin-bottom: 0.75rem !important;
+  }
+  .mb-8 {
+    margin-bottom: 1rem !important;
+  }
+  .mb-6 {
+    margin-bottom: 0.75rem !important;
+  }
+  .mockup-shadow {
+    height: 200px !important;
+  }
+  .pricing-card {
+    padding: 0.85rem !important;
+  }
+}
+
+@media screen and (max-height: 720px) {
+  .relative.z-5.flex-1 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 1rem !important;
+  }
+  h1 {
+    font-size: 1.85rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  p {
+    font-size: 0.8rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .mb-8 {
+    margin-bottom: 0.75rem !important;
+  }
+  .mb-6 {
+    margin-bottom: 0.5rem !important;
+  }
+  .mockup-shadow {
+    height: 140px !important;
+  }
+  .pricing-card {
+    padding: 0.65rem !important;
+  }
+}
