@@ -85,22 +85,27 @@ body {
 }
 
 ::view-transition-old(main-content) {
-  animation: fade-out-main 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: slide-out-main 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 ::view-transition-new(main-content) {
-  animation: slide-horizontal-main 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: slide-horizontal-main 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes fade-out-main {
+@keyframes slide-out-main {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
   to {
     opacity: 0;
+    transform: translateX(-16px);
   }
 }
 
 @keyframes slide-horizontal-main {
   from {
     opacity: 0;
-    transform: translateX(18px);
+    transform: translateX(16px);
   }
   to {
     opacity: 1;
