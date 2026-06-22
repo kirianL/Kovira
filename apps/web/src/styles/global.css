@@ -84,12 +84,11 @@ body {
   opacity: 0;
 }
 
-/* Custom Snappy View Transitions for main-content */
 ::view-transition-old(main-content) {
   animation: fade-out-main 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 ::view-transition-new(main-content) {
-  animation: slide-up-main 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: slide-horizontal-main 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fade-out-main {
@@ -98,14 +97,14 @@ body {
   }
 }
 
-@keyframes slide-up-main {
+@keyframes slide-horizontal-main {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateX(18px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 

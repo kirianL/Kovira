@@ -325,11 +325,11 @@ const { title, activeTab } = Astro.props;
             word.style.display = 'inline-block';
             word.style.position = 'relative';
             word.style.opacity = '0';
-            word.style.transform = 'translateY(28px)';
+            word.style.transform = 'translateX(-24px)';
           });
           animate(
             split.words,
-            { opacity: [0, 1], y: [28, 0] },
+            { opacity: [0, 1], x: [-24, 0] },
             { 
               duration: 0.48, 
               delay: stagger(0.055), 
@@ -343,11 +343,11 @@ const { title, activeTab } = Astro.props;
       if (fadeElements.length > 0) {
         fadeElements.forEach(el => {
           (el as HTMLElement).style.opacity = '0';
-          (el as HTMLElement).style.transform = 'translateY(16px)';
+          (el as HTMLElement).style.transform = 'translateX(-16px)';
         });
         animate(
           fadeElements,
-          { opacity: [0, 1], y: [16, 0] },
+          { opacity: [0, 1], x: [-16, 0] },
           { 
             duration: 0.42, 
             delay: stagger(0.06, { startDelay: 0.12 }), 
