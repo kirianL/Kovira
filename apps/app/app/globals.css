@@ -6,6 +6,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -1196,12 +1200,12 @@ h3 {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.02) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    background: transparent !important;
+    border: none !important;
     cursor: pointer;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-buttons);
     color: var(--color-ash);
     margin-left: auto;
     flex-shrink: 0;
@@ -1209,13 +1213,12 @@ h3 {
   }
 
   .mobile-menu-close:hover {
-    background: rgba(0, 0, 0, 0.05) !important;
+    background: var(--color-soft-mist) !important;
     color: var(--color-ink);
-    transform: rotate(90deg);
   }
 
   .mobile-menu-close:active {
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
 
   /* Drawer width on mobile */
