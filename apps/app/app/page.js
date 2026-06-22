@@ -1508,13 +1508,6 @@ export default function SaaSApp() {
           SIDEBAR NAVIGATION (03-ui-architecture.md)
           ============================================================ */}
       <aside className={`sidebar ${isMobileSidebarOpen ? "mobile-open" : ""}`} aria-label="Menú principal">
-        <button 
-          className="mobile-menu-close" 
-          onClick={() => setIsMobileSidebarOpen(false)}
-          aria-label="Cerrar menú de navegación"
-        >
-          <Icon name="x" size={16} />
-        </button>
         <div className="sidebar-brand">
           <div className="brand-mark" style={{ color: 'var(--color-ink)' }}>
             <svg style={{ height: '20px', width: 'auto' }} viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1544,6 +1537,14 @@ export default function SaaSApp() {
             style={{ border: "none", background: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "4px", borderRadius: "4px", color: "var(--color-ash)" }}
           >
             <Lucide.ChevronLeft size={16} />
+          </button>
+          <button 
+            className="mobile-menu-close" 
+            onClick={() => setIsMobileSidebarOpen(false)}
+            aria-label="Cerrar menú de navegación"
+            style={{ border: "none", background: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "4px", borderRadius: "4px", color: "var(--color-ash)" }}
+          >
+            <Icon name="x" size={16} />
           </button>
         </div>
 

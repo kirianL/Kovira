@@ -124,6 +124,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .sidebar-divider {
@@ -1195,16 +1196,15 @@ h3 {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    align-self: flex-end;
     background: rgba(0, 0, 0, 0.02) !important;
     border: 1px solid rgba(0, 0, 0, 0.06) !important;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
     color: var(--color-ash);
-    margin-bottom: 16px;
-    margin-right: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
