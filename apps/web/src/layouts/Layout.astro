@@ -59,7 +59,7 @@ const { title, activeTab } = Astro.props;
       <path d="M 220 550 Q 720 350 1220 550" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-dasharray="4 8" />
     </svg>
 
-    <main transition:name="main-content" class="flex-1 flex flex-col w-full min-h-0 relative z-5 overflow-y-auto">
+    <main transition:name="main-content" class="flex-1 flex flex-col w-full min-h-0 relative z-5 overflow-hidden">
       <slot />
     </main>
 
@@ -70,8 +70,8 @@ const { title, activeTab } = Astro.props;
       <a href="/analytics" class={`text-xs font-semibold tracking-tight transition-all duration-200 ${activeTab === 'analytics' ? 'text-white scale-105' : 'text-white/50 hover:text-white/80'}`}>Analytics</a>
     </div>
 
-    <div transition:name="footer" transition:animate="none" class="w-full flex flex-col items-center gap-1 pb-4 z-5 relative max-[768px]:pb-3">
-      <div class="text-[11px] text-white/50 tracking-wider text-center">
+    <div transition:name="footer" transition:animate="none" class="absolute bottom-0 left-0 right-0 w-full flex flex-col items-center gap-1 pb-4 z-10 pointer-events-none max-[768px]:pb-3">
+      <div class="text-[11px] text-white/50 tracking-wider text-center pointer-events-auto">
         <span>© 2026 Kovira. All rights reserved.</span>
         <a href="/help" class="mx-2 transition-colors duration-200 hover:text-white/80">Help</a>
         <a href="/terms" class="mx-2 transition-colors duration-200 hover:text-white/80">Terms</a>
@@ -80,7 +80,7 @@ const { title, activeTab } = Astro.props;
         <a href="/app" class="mx-2 transition-colors duration-200 hover:text-white/80">Platform</a>
         <a href="/app?tab=settings" class="mx-2 transition-colors duration-200 hover:text-white/80">API Keys</a>
       </div>
-      <div class="text-[11px] text-white/50 tracking-wide text-center">Developed by Kirian with <span class="text-white/60">♥</span></div>
+      <div class="text-[11px] text-white/50 tracking-wide text-center pointer-events-auto">Developed by Kirian with <span class="text-white/60">♥</span></div>
     </div>
   </div>
 
