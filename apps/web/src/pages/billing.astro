@@ -48,12 +48,13 @@ import Layout from '../layouts/Layout.astro';
           <div>
             <div class="text-[10px] font-bold text-ash uppercase tracking-wider mb-2">Payment Details</div>
             <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-6 bg-white/5 rounded border border-white/10 flex items-center justify-center">
-                <span class="text-[10px] font-extrabold text-white">VISA</span>
+              <!-- Card Brand Logo Icon Container -->
+              <div id="card-brand-logo-container" class="w-10 h-6 bg-white/5 rounded border border-white/10 flex items-center justify-center">
+                <span id="active-card-brand-text" class="text-[9px] font-extrabold text-white tracking-widest">VISA</span>
               </div>
               <div>
-                <div class="text-xs font-semibold text-white">Visa ending in 4242</div>
-                <div class="text-[10px] text-white/50">Expires 12/28</div>
+                <div id="active-card-name" class="text-xs font-semibold text-white">Visa ending in 4242</div>
+                <div id="active-card-expiry" class="text-[10px] text-white/50 font-mono">Expires 12/28</div>
               </div>
             </div>
             <p class="text-xs text-white/50 leading-relaxed mb-4">
@@ -61,7 +62,7 @@ import Layout from '../layouts/Layout.astro';
             </p>
           </div>
           <div class="flex items-center gap-2 mt-2">
-            <button class="bg-transparent text-white/80 border border-white/10 px-4 py-2 rounded-buttons text-xs font-medium hover:text-white hover:border-white/20 transition-all cursor-pointer">
+            <button id="open-payment-modal-btn" class="bg-transparent text-white/80 border border-white/10 px-4 py-2 rounded-buttons text-xs font-medium hover:text-white hover:border-white/20 transition-all cursor-pointer">
               Update Payment Method
             </button>
           </div>
@@ -90,21 +91,21 @@ import Layout from '../layouts/Layout.astro';
                 <td class="px-5 py-3.5">May 21, 2026</td>
                 <td class="px-5 py-3.5">$29.00</td>
                 <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span></td>
-                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer" data-invoice="RNY-05212026-0077">View Invoice</button></td>
+                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer bg-transparent border-none p-0" data-invoice="RNY-05212026-0077">View Invoice</button></td>
               </tr>
               <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
                 <td class="px-5 py-3.5 font-mono text-white/90">RNY-04212026-0051</td>
                 <td class="px-5 py-3.5">Apr 21, 2026</td>
                 <td class="px-5 py-3.5">$29.00</td>
                 <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span></td>
-                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer" data-invoice="RNY-04212026-0051">View Invoice</button></td>
+                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer bg-transparent border-none p-0" data-invoice="RNY-04212026-0051">View Invoice</button></td>
               </tr>
               <tr class="hover:bg-white/5 transition-colors">
                 <td class="px-5 py-3.5 font-mono text-white/90">RNY-03212026-0024</td>
                 <td class="px-5 py-3.5">Mar 21, 2026</td>
                 <td class="px-5 py-3.5">$29.00</td>
                 <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span></td>
-                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer" data-invoice="RNY-03212026-0024">View Invoice</button></td>
+                <td class="px-5 py-3.5 text-right"><button class="view-invoice-btn text-white/80 hover:text-white font-medium underline underline-offset-4 cursor-pointer bg-transparent border-none p-0" data-invoice="RNY-03212026-0024">View Invoice</button></td>
               </tr>
             </tbody>
           </table>
@@ -115,8 +116,8 @@ import Layout from '../layouts/Layout.astro';
   </div>
 
   <!-- Printable Invoice Dialog Overlay -->
-  <div id="invoice-modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6 hidden pointer-events-none opacity-0 transition-opacity duration-200">
-    <div class="bg-white rounded-[14px] w-full max-w-[620px] max-h-[90vh] overflow-y-auto shadow-2xl relative pointer-events-auto p-8 flex flex-col gap-6 text-[#262626] font-sans">
+  <div id="invoice-modal-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-6 hidden pointer-events-none opacity-0 transition-opacity duration-200">
+    <div id="invoice-modal-content" class="bg-white rounded-[14px] w-full max-w-[620px] max-h-[90vh] overflow-y-auto shadow-2xl relative pointer-events-auto p-8 flex flex-col gap-6 text-[#262626] font-sans opacity-0 scale-[0.96] translate-y-4">
       
       <!-- Close Button -->
       <button id="close-invoice-modal-btn" class="absolute top-4 right-4 text-ash hover:text-ink cursor-pointer bg-transparent border-none p-1" aria-label="Close invoice">
@@ -124,7 +125,7 @@ import Layout from '../layouts/Layout.astro';
       </button>
 
       <!-- Invoice Artwork Header -->
-      <div class="w-full h-32 rounded-lg bg-cover bg-center bg-no-repeat overflow-hidden grayscale contrast-[1.2]" style="background-image: url('/Background.png');">
+      <div class="w-full h-32 rounded-lg bg-cover bg-center bg-no-repeat overflow-hidden grayscale contrast-[1.2] border border-[#ededed]" style="background-image: url('/Background.png');">
         <!-- Grayscale filtered overlay to simulate the black and white hands artwork look -->
         <div class="w-full h-full bg-black/10 flex items-center justify-center">
           <span class="text-white/25 text-[10px] font-bold tracking-widest uppercase">K O V I R A</span>
@@ -154,7 +155,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="grid grid-cols-3 gap-4 text-[10px] leading-relaxed text-ash border-b border-[#ededed] pb-5">
         <div>
           <span class="block text-[#a0a0a0] uppercase font-semibold text-[8px] mb-1">From</span>
-          <strong class="text-ink">Kovira Inc.</strong><br />
+          <strong class="text-ink font-semibold">Kovira Inc.</strong><br />
           billing@kovira.dev<br />
           548 Market St, San Francisco<br />
           California, US<br />
@@ -162,7 +163,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <div>
           <span class="block text-[#a0a0a0] uppercase font-semibold text-[8px] mb-1">Bill To</span>
-          <strong class="text-ink" id="invoice-modal-bill-to">Kirian Dev</strong><br />
+          <strong class="text-ink font-semibold" id="invoice-modal-bill-to">Kirian Dev</strong><br />
           kirian@kovira.dev<br />
           Av. de la Reforma 250<br />
           Ciudad de México, MX<br />
@@ -186,9 +187,9 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <div class="grid grid-cols-[1fr_50px_80px_80px] border-b border-[#ededed] py-3.5 text-xs text-ink font-medium">
           <div>Kovira SaaS platform — Pro Subscription Plan</div>
-          <div class="text-center">1</div>
-          <div class="text-right">$29.00</div>
-          <div class="text-right">$29.00</div>
+          <div class="text-center font-mono">1</div>
+          <div class="text-right font-mono">$29.00</div>
+          <div class="text-right font-mono">$29.00</div>
         </div>
       </div>
 
@@ -196,15 +197,15 @@ import Layout from '../layouts/Layout.astro';
       <div class="flex flex-col items-end gap-1.5 text-xs font-medium pr-1 mt-2 text-ink">
         <div class="flex justify-between w-[200px] border-b border-[#ededed]/60 pb-1">
           <span class="text-ash">Subtotal</span>
-          <span>$29.00</span>
+          <span class="font-mono">$29.00</span>
         </div>
         <div class="flex justify-between w-[200px] border-b border-[#ededed]/60 pb-1">
           <span class="text-ash">Tax (0%)</span>
-          <span>$0.00</span>
+          <span class="font-mono">$0.00</span>
         </div>
         <div class="flex justify-between w-[200px] font-bold text-black text-sm">
           <span>Total</span>
-          <span>$29.00 USD</span>
+          <span class="font-mono">$29.00 USD</span>
         </div>
       </div>
 
@@ -213,7 +214,7 @@ import Layout from '../layouts/Layout.astro';
         <div>
           <span class="block text-[#a0a0a0] uppercase font-semibold text-[8px] mb-1">Payment Details</span>
           Payment Method: Credit Card<br />
-          Card Vendor: Visa Ending 4242<br />
+          Card Vendor: <span id="invoice-modal-card-vendor">Visa Ending 4242</span><br />
           Payment Gateway: Stripe Secure
         </div>
         <div>
@@ -224,7 +225,7 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- Print Button -->
       <div class="w-full flex justify-end gap-2 mt-4">
-        <button onclick="window.print()" class="bg-[#262626] text-white border border-[#262626] px-4 py-2 rounded-buttons text-xs font-semibold hover:bg-black transition-colors cursor-pointer">
+        <button onclick="window.print()" class="bg-[#262626] text-white border border-[#262626] px-5 py-2.5 rounded-buttons text-xs font-semibold hover:bg-black transition-colors cursor-pointer">
           Print Invoice
         </button>
       </div>
@@ -232,18 +233,173 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </div>
 
-  <script>
-    // Event listeners to handle modal open/close
-    document.addEventListener('astro:page-load', () => {
-      const openModalBtns = document.querySelectorAll('.view-invoice-btn');
-      const modalOverlay = document.getElementById('invoice-modal-overlay');
-      const closeModalBtn = document.getElementById('close-invoice-modal-btn');
+  <!-- Interactive Update Payment Method Drawer Modal -->
+  <div id="payment-modal-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-6 hidden pointer-events-none opacity-0 transition-opacity duration-200">
+    <div id="payment-modal-content" class="bg-white rounded-[14px] w-full max-w-[420px] shadow-2xl relative pointer-events-auto p-8 flex flex-col gap-5 text-[#262626] font-sans opacity-0 scale-[0.96] translate-y-4">
       
+      <!-- Close Button -->
+      <button id="close-payment-modal-btn" class="absolute top-4 right-4 text-ash hover:text-ink cursor-pointer bg-transparent border-none p-1" aria-label="Close form">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <div>
+        <h3 class="text-lg font-bold text-black tracking-tight mb-1">Update Payment Method</h3>
+        <p class="text-xs text-ash leading-relaxed">Enter your billing information below to link a new card.</p>
+      </div>
+
+      <!-- Supported Cards Row -->
+      <div class="flex items-center gap-2 border-b border-[#ededed] pb-3.5">
+        <span class="text-[9px] font-bold text-[#a0a0a0] uppercase">We accept</span>
+        <div class="flex gap-1.5 ml-auto">
+          <!-- Visa logo icon -->
+          <div id="logo-visa" class="w-7 h-5 rounded border border-[#ededed] bg-[#fbfbfb] flex items-center justify-center text-[8px] font-black text-blue-800 opacity-60">VISA</div>
+          <!-- Mastercard logo icon -->
+          <div id="logo-mastercard" class="w-7 h-5 rounded border border-[#ededed] bg-[#fbfbfb] flex items-center justify-center text-[8px] font-black text-orange-600 opacity-60">MC</div>
+          <!-- Amex logo icon -->
+          <div id="logo-amex" class="w-7 h-5 rounded border border-[#ededed] bg-[#fbfbfb] flex items-center justify-center text-[8px] font-black text-cyan-600 opacity-60">AMEX</div>
+        </div>
+      </div>
+
+      <form id="payment-update-form" class="flex flex-col gap-4">
+        <!-- Cardholder Name -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] font-bold text-ink uppercase tracking-wide">Cardholder Name</label>
+          <input type="text" id="cardholder-name" required placeholder="Kirian Dev" class="w-full border border-[#ededed] rounded-buttons px-3 py-2 text-xs focus:outline-none focus:border-[#262626] placeholder-[#cbcbcb] text-[#262626] font-sans" />
+        </div>
+
+        <!-- Card Number -->
+        <div class="flex flex-col gap-1.5 relative">
+          <label class="text-[10px] font-bold text-ink uppercase tracking-wide">Card Number</label>
+          <div class="relative">
+            <input type="text" id="card-number" required maxlength="19" placeholder="4000 1234 5678 9010" class="w-full border border-[#ededed] rounded-buttons pl-3 pr-10 py-2 text-xs focus:outline-none focus:border-[#262626] placeholder-[#cbcbcb] text-[#262626] font-sans font-mono" />
+            <!-- Floating brand indicator inside input -->
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-[8px] font-black text-ash uppercase font-mono" id="card-input-brand-indicator">CARD</div>
+          </div>
+        </div>
+
+        <!-- Expiry & CVC Grid -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] font-bold text-ink uppercase tracking-wide">Expiration</label>
+            <input type="text" id="card-expiry" required maxlength="5" placeholder="MM/YY" class="w-full border border-[#ededed] rounded-buttons px-3 py-2 text-xs focus:outline-none focus:border-[#262626] placeholder-[#cbcbcb] text-[#262626] font-sans font-mono text-center" />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] font-bold text-ink uppercase tracking-wide">CVC</label>
+            <input type="password" id="card-cvc" required maxlength="4" placeholder="•••" class="w-full border border-[#ededed] rounded-buttons px-3 py-2 text-xs focus:outline-none focus:border-[#262626] placeholder-[#cbcbcb] text-[#262626] font-sans font-mono text-center" />
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-3 mt-2 border-t border-[#ededed] pt-4">
+          <button type="submit" id="save-card-btn" class="flex-1 bg-[#262626] text-white border border-[#262626] py-2.5 rounded-buttons text-xs font-semibold hover:bg-black transition-colors cursor-pointer flex justify-center items-center gap-2">
+            <span>Update Card</span>
+          </button>
+          <button type="button" id="cancel-payment-modal-btn" class="bg-transparent text-ash border border-[#ededed] py-2.5 px-4 rounded-buttons text-xs font-medium hover:text-ink hover:border-ash transition-all cursor-pointer">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Minimalist Success Toast -->
+  <div id="billing-success-toast" class="fixed bottom-6 right-6 bg-[#262626] text-white text-xs font-medium py-3 px-5 rounded-buttons shadow-xl z-[150] border border-white/10 flex items-center gap-2 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
+    <span id="toast-message-text">Payment details updated successfully!</span>
+  </div>
+
+  <script>
+    import { animate, stagger } from 'motion';
+
+    document.addEventListener('astro:page-load', () => {
+      // Elements
+      const openInvoiceBtns = document.querySelectorAll('.view-invoice-btn');
+      const invoiceOverlay = document.getElementById('invoice-modal-overlay');
+      const invoiceContent = document.getElementById('invoice-modal-content');
+      const closeInvoiceBtn = document.getElementById('close-invoice-modal-btn');
       const invoiceModalId = document.getElementById('invoice-modal-id');
       const invoiceModalDate = document.getElementById('invoice-modal-date');
+      const invoiceModalCardVendor = document.getElementById('invoice-modal-card-vendor');
 
-      openModalBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+      const openPaymentBtn = document.getElementById('open-payment-modal-btn');
+      const paymentOverlay = document.getElementById('payment-modal-overlay');
+      const paymentContent = document.getElementById('payment-modal-content');
+      const closePaymentBtn = document.getElementById('close-payment-modal-btn');
+      const cancelPaymentBtn = document.getElementById('cancel-payment-modal-btn');
+      const paymentForm = document.getElementById('payment-update-form');
+
+      // Card brand logos in update form
+      const logoVisa = document.getElementById('logo-visa');
+      const logoMaster = document.getElementById('logo-mastercard');
+      const logoAmex = document.getElementById('logo-amex');
+      const cardBrandIndicator = document.getElementById('card-input-brand-indicator');
+
+      // Card input fields
+      const inputCardNumber = document.getElementById('card-number') as HTMLInputElement;
+      const inputCardExpiry = document.getElementById('card-expiry') as HTMLInputElement;
+      const inputCardholder = document.getElementById('cardholder-name') as HTMLInputElement;
+
+      // Active UI payment details display
+      const activeCardBrandText = document.getElementById('active-card-brand-text');
+      const activeCardName = document.getElementById('active-card-name');
+      const activeCardExpiry = document.getElementById('active-card-expiry');
+
+      // Toast elements
+      const successToast = document.getElementById('billing-success-toast');
+      const toastText = document.getElementById('toast-message-text');
+
+      let currentCardNumber = '4242';
+      let currentCardBrand = 'VISA';
+      let currentExpiry = '12/28';
+
+      // Animate helper to open modal
+      const openModal = (overlay: HTMLElement, content: HTMLElement) => {
+        overlay.classList.remove('hidden');
+        overlay.classList.remove('pointer-events-none');
+        overlay.classList.add('pointer-events-auto');
+
+        // Smooth fade-in overlay & slide-up scale content
+        animate(overlay, { opacity: [0, 1] }, { duration: 0.22 });
+        animate(
+          content,
+          { opacity: [0, 1], scale: [0.96, 1], y: [16, 0] },
+          { duration: 0.36, easing: [0.16, 1, 0.3, 1] }
+        );
+      };
+
+      // Animate helper to close modal
+      const closeModal = (overlay: HTMLElement, content: HTMLElement) => {
+        overlay.classList.remove('pointer-events-auto');
+        overlay.classList.add('pointer-events-none');
+
+        animate(overlay, { opacity: 0 }, { duration: 0.2 });
+        animate(
+          content,
+          { opacity: 0, scale: 0.96, y: 16 },
+          { duration: 0.2, easing: [0.16, 1, 0.3, 1] }
+        ).then(() => {
+          overlay.classList.add('hidden');
+        });
+      };
+
+      // Show toast helper
+      const showToast = (message: string) => {
+        if (!successToast || !toastText) return;
+        toastText.textContent = message;
+        
+        successToast.classList.remove('opacity-0', 'translate-y-24', 'pointer-events-none');
+        successToast.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+        
+        setTimeout(() => {
+          successToast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+          successToast.classList.add('opacity-0', 'translate-y-24', 'pointer-events-none');
+        }, 3000);
+      };
+
+      // Invoice Modal Open
+      openInvoiceBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
           const invoiceId = btn.getAttribute('data-invoice');
           if (invoiceModalId) invoiceModalId.textContent = invoiceId || '';
           
@@ -251,37 +407,145 @@ import Layout from '../layouts/Layout.astro';
           if (invoiceId?.includes('0421')) dateStr = 'Apr 21, 2026';
           if (invoiceId?.includes('0321')) dateStr = 'Mar 21, 2026';
           if (invoiceModalDate) invoiceModalDate.textContent = dateStr;
+          if (invoiceModalCardVendor) invoiceModalCardVendor.textContent = `${currentCardBrand.charAt(0) + currentCardBrand.slice(1).toLowerCase()} Ending ${currentCardNumber}`;
 
-          if (modalOverlay) {
-            modalOverlay.classList.remove('hidden');
-            setTimeout(() => {
-              modalOverlay.classList.remove('opacity-0', 'pointer-events-none');
-              modalOverlay.classList.add('opacity-100', 'pointer-events-auto');
-            }, 10);
+          if (invoiceOverlay && invoiceContent) {
+            openModal(invoiceOverlay, invoiceContent);
           }
         });
       });
 
-      if (closeModalBtn && modalOverlay) {
-        closeModalBtn.addEventListener('click', () => {
-          modalOverlay.classList.remove('opacity-100', 'pointer-events-auto');
-          modalOverlay.classList.add('opacity-0', 'pointer-events-none');
-          setTimeout(() => {
-            modalOverlay.classList.add('hidden');
-          }, 200);
+      if (closeInvoiceBtn && invoiceOverlay && invoiceContent) {
+        closeInvoiceBtn.addEventListener('click', () => {
+          closeModal(invoiceOverlay, invoiceContent);
         });
       }
 
-      // Close modal on escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modalOverlay && !modalOverlay.classList.contains('hidden')) {
-          modalOverlay.classList.remove('opacity-100', 'pointer-events-auto');
-          modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+      // Payment Modal Open
+      if (openPaymentBtn && paymentOverlay && paymentContent) {
+        openPaymentBtn.addEventListener('click', () => {
+          openModal(paymentOverlay, paymentContent);
+        });
+      }
+
+      const closePaymentModal = () => {
+        if (paymentOverlay && paymentContent) {
+          closeModal(paymentOverlay, paymentContent);
+        }
+      };
+
+      if (closePaymentBtn) closePaymentBtn.addEventListener('click', closePaymentModal);
+      if (cancelPaymentBtn) cancelPaymentBtn.addEventListener('click', closePaymentModal);
+
+      // Card Number input validation & branding display
+      if (inputCardNumber) {
+        inputCardNumber.addEventListener('input', (e) => {
+          let value = inputCardNumber.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+          let formattedValue = '';
+          
+          // Formatter (groups of 4)
+          for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) formattedValue += ' ';
+            formattedValue += value[i];
+          }
+          inputCardNumber.value = formattedValue;
+
+          // Brand detection
+          let brand = 'CARD';
+          logoVisa?.classList.add('opacity-60');
+          logoMaster?.classList.add('opacity-60');
+          logoAmex?.classList.add('opacity-60');
+
+          if (value.startsWith('4')) {
+            brand = 'VISA';
+            logoVisa?.classList.remove('opacity-60');
+          } else if (value.startsWith('5')) {
+            brand = 'MASTERCARD';
+            logoMaster?.classList.remove('opacity-60');
+          } else if (value.startsWith('37') || value.startsWith('34')) {
+            brand = 'AMEX';
+            logoAmex?.classList.remove('opacity-60');
+          }
+
+          if (cardBrandIndicator) {
+            cardBrandIndicator.textContent = brand;
+          }
+        });
+      }
+
+      // Expiry MM/YY formatting helper
+      if (inputCardExpiry) {
+        inputCardExpiry.addEventListener('input', (e) => {
+          let value = inputCardExpiry.value.replace(/\D/g, '');
+          if (value.length >= 2) {
+            inputCardExpiry.value = value.slice(0, 2) + '/' + value.slice(2, 4);
+          } else {
+            inputCardExpiry.value = value;
+          }
+        });
+      }
+
+      // Handle card form submission
+      if (paymentForm) {
+        paymentForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const saveBtn = document.getElementById('save-card-btn');
+          const saveBtnSpan = saveBtn?.querySelector('span');
+
+          // Visual loading state
+          if (saveBtn && saveBtnSpan) {
+            saveBtn.setAttribute('disabled', 'true');
+            saveBtnSpan.textContent = 'Linking card...';
+          }
+
           setTimeout(() => {
-            modalOverlay.classList.add('hidden');
-          }, 200);
+            // Retrieve card digits
+            const digitsVal = inputCardNumber.value.replace(/\s+/g, '');
+            const cardholderVal = inputCardholder.value || 'Cardholder';
+            const brandText = cardBrandIndicator?.textContent || 'VISA';
+            
+            currentCardNumber = digitsVal.slice(-4) || '9999';
+            currentCardBrand = brandText;
+            currentExpiry = inputCardExpiry.value || '12/28';
+
+            // Update main page details
+            if (activeCardBrandText) activeCardBrandText.textContent = currentCardBrand;
+            if (activeCardName) activeCardName.textContent = `${currentCardBrand.charAt(0) + currentCardBrand.slice(1).toLowerCase()} ending in ${currentCardNumber}`;
+            if (activeCardExpiry) activeCardExpiry.textContent = `Expires ${currentExpiry}`;
+
+            // Reset loading & close modal
+            if (saveBtn && saveBtnSpan) {
+              saveBtn.removeAttribute('disabled');
+              saveBtnSpan.textContent = 'Update Card';
+            }
+
+            closePaymentModal();
+            showToast('Billing credit card updated successfully!');
+
+            // Clear inputs
+            paymentForm.reset();
+            if (cardBrandIndicator) cardBrandIndicator.textContent = 'CARD';
+            logoVisa?.classList.add('opacity-60');
+            logoMaster?.classList.add('opacity-60');
+            logoAmex?.classList.add('opacity-60');
+
+          }, 1200);
+        });
+      }
+
+      // Global Escape key modal handler
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (invoiceOverlay && !invoiceOverlay.classList.contains('hidden')) {
+            closeModal(invoiceOverlay, invoiceContent!);
+          }
+          if (paymentOverlay && !paymentOverlay.classList.contains('hidden')) {
+            closeModal(paymentOverlay, paymentContent!);
+          }
         }
       });
+
     });
   </script>
 </Layout>
