@@ -1509,91 +1509,110 @@ export default function SaaSApp() {
           SIDEBAR NAVIGATION (03-ui-architecture.md)
           ============================================================ */}
       <aside className={`sidebar ${isMobileSidebarOpen ? "mobile-open" : ""}`} aria-label="Menú principal">
-        <div className="sidebar-brand flex items-center justify-between gap-2.5 p-1 px-2 pb-4">
+        <div className="flex items-center justify-between gap-2 mb-3">
           <div className="brand-mark flex items-center justify-center shrink-0" style={{ color: 'var(--color-ink)', width: '22px', height: '22px' }}>
             <svg style={{ width: "22px", height: "22px", minWidth: "22px", minHeight: "22px" }} viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M22.2782 6.3584C23.3828 6.3584 C24.2782 7.25383 24.2782 8.3584V15.4716C24.3202 15.4824 24.3621 15.4936 24.4038 15.5052L28.96 7.61365L30.3071 8.39141C31.2636 8.94371 31.5914 10.1669 31.0391 11.1235L27.4822 17.2841C27.5129 17.3142 27.5433 17.3446 27.5734 17.3752L35.4668 12.818L36.2446 14.1652C36.7969 15.1218 36.4691 16.3449 35.5125 16.8972L29.3536 20.4531C29.3654 20.4956 29.3768 20.5382 29.3878 20.5811H38.5V22.1366C38.5 23.2412 37.6046 24.1366 36.5 24.1366H29.3878C29.377 24.1787 29.3658 24.2207 29.3542 24.2625L37.2446 28.818L36.4668 30.1652C35.9145 31.1218 34.6913 31.4495 33.7347 30.8973L27.5748 27.3409C27.5446 27.3717 27.5141 27.4022 27.4833 27.4324L32.0401 35.325L30.6931 36.1028C29.7365 36.6551 28.5133 36.3273 27.961 35.3708L24.4052 29.212C24.363 29.2237 24.3207 29.235 24.2782 29.2459V38.3584H22.7227C21.6181 38.3584 20.7227 37.463 20.7227 36.3584V29.2458C20.6802 29.2349 20.6379 29.2235 20.5958 29.2119L16.0392 37.1042L14.692 36.3264C13.7354 35.7742 13.4077 34.551 13.96 33.5944L17.5178 27.432C17.4868 27.4016 17.456 27.3708 17.4256 27.3398L9.53168 31.8973L8.75387 30.55C8.2016 29.5934 8.52936 28.3703 9.48594 27.818L15.6469 24.261C15.6355 24.2197 15.6244 24.1782 15.6137 24.1366H6.5V22.5811C6.5 21.4765 7.39543 20.5811 8.5 20.5811H15.6137C15.6246 20.5388 15.6358 20.4966 15.6475 20.4546L7.75391 15.8972L8.53169 14.5501C9.08397 13.5935 10.3071 13.2657 11.2637 13.818L17.427 17.3763C17.4573 17.3455 17.4879 17.3148 17.5188 17.2845L12.9609 9.39008L14.3081 8.61231C15.2647 8.06002 16.4879 8.38777 17.0401 9.34436L20.5972 15.5053C20.6388 15.4938 20.6807 15.4826 20.7227 15.4718V6.3584H22.2782ZM25.647 24.0166L25.5129 24.2489C25.2237 24.7087 24.8322 25.0977 24.3703 25.3838L24.1802 25.4935C23.6947 25.7542 23.1416 25.9053 22.554 25.914H22.4475C20.5083 25.8855 18.9452 24.3047 18.9452 22.3588C18.9452 20.3951 20.537 18.8032 22.5008 18.8032C23.1125 18.8032 23.6882 18.9577 24.1909 19.2298L24.3599 19.3274C24.8366 19.6204 25.239 20.0227 25.532 20.4994L25.6299 20.669C25.8909 21.1513 26.0436 21.7007 26.0556 22.2847V22.4329C26.0439 23.0041 25.8975 23.5421 25.647 24.0166Z" fill="currentColor"/>
             </svg>
           </div>
-
-          <div className="relative flex-1 min-w-0 pr-2">
-            <button
-              onClick={() => setIsWorkspaceDropdownOpen(!isWorkspaceDropdownOpen)}
-              className="flex items-center justify-between w-full text-left p-1 rounded hover:bg-neutral-100 transition-colors focus:outline-none"
-              style={{ background: "none", border: "none", cursor: "pointer", display: "flex", gap: "6px" }}
+          <div className="flex items-center gap-1.5 ml-auto">
+            <button 
+              className="sidebar-collapse-btn p-1.5 rounded hover:bg-neutral-100 transition-colors shrink-0" 
+              onClick={() => setIsSidebarCollapsed(true)}
+              aria-label="Colapsar barra lateral"
+              title="Colapsar barra lateral"
+              style={{ border: "none", background: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "var(--color-ash)" }}
             >
-              <div className="flex flex-col min-w-0 text-left">
-                <span style={{ fontSize: "14px", fontWeight: "700", color: "var(--color-ink)", lineHeight: "1.2" }} className="truncate">
-                  {activeWorkspace === "personal" ? "Mi Workspace" : "Acme Corp"}
-                </span>
-                <span style={{ fontSize: "10px", color: "var(--color-ash)", marginTop: "2px" }} className="truncate">
-                  {workspaceName}
-                </span>
-              </div>
-              <Lucide.ChevronsUpDown size={14} className="text-neutral-400 shrink-0 ml-auto" />
+              <Lucide.ChevronLeft size={16} />
             </button>
-
-            {isWorkspaceDropdownOpen && (
-              <>
-                <div 
-                  className="fixed inset-0 z-45" 
-                  style={{ zIndex: 9998 }}
-                  onClick={() => setIsWorkspaceDropdownOpen(false)}
-                />
-                <div 
-                  className="absolute left-0 mt-1 w-52 bg-white border border-neutral-200 rounded-md shadow-lg py-1.5"
-                  style={{ borderColor: "var(--color-soft-mist)", boxShadow: "var(--shadow-subtle)", zIndex: 9999 }}
-                >
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
-                    Workspaces
-                  </div>
-                  <button
-                    onClick={() => {
-                      setActiveWorkspace("personal");
-                      setActiveTab("dashboard");
-                      setIsWorkspaceDropdownOpen(false);
-                    }}
-                    className={`flex items-center justify-between w-full text-left px-3 py-2 text-xs hover:bg-neutral-50 transition-colors ${activeWorkspace === "personal" ? "font-semibold text-neutral-900" : "text-neutral-600"}`}
-                    style={{ background: "none", border: "none", cursor: "pointer" }}
-                  >
-                    <span>Mi Workspace</span>
-                    {activeWorkspace === "personal" && <Lucide.Check size={12} className="text-neutral-900" />}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActiveWorkspace("acme");
-                      setActiveTab("dashboard");
-                      setIsWorkspaceDropdownOpen(false);
-                    }}
-                    className={`flex items-center justify-between w-full text-left px-3 py-2 text-xs hover:bg-neutral-50 transition-colors ${activeWorkspace === "acme" ? "font-semibold text-neutral-900" : "text-neutral-600"}`}
-                    style={{ background: "none", border: "none", cursor: "pointer" }}
-                  >
-                    <span>Acme Corp</span>
-                    {activeWorkspace === "acme" && <Lucide.Check size={12} className="text-neutral-900" />}
-                  </button>
-                </div>
-              </>
-            )}
+            <button 
+              className="mobile-menu-close p-1.5 rounded hover:bg-neutral-100 active:bg-neutral-200 transition-colors shrink-0" 
+              onClick={() => setIsMobileSidebarOpen(false)}
+              aria-label="Cerrar menú de navegación"
+              style={{ border: "none", background: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "var(--color-ash)" }}
+            >
+              <Icon name="x" size={16} />
+            </button>
           </div>
-
-          <button 
-            className="sidebar-collapse-btn p-1.5 rounded hover:bg-neutral-100 transition-colors shrink-0" 
-            onClick={() => setIsSidebarCollapsed(true)}
-            aria-label="Colapsar barra lateral"
-            title="Colapsar barra lateral"
-            style={{ border: "none", background: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "var(--color-ash)" }}
-          >
-            <Lucide.ChevronLeft size={16} />
-          </button>
-          <button 
-            className="mobile-menu-close p-1.5 rounded hover:bg-neutral-100 active:bg-neutral-200 transition-colors shrink-0" 
-            onClick={() => setIsMobileSidebarOpen(false)}
-            aria-label="Cerrar menú de navegación"
-            style={{ border: "none", background: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "var(--color-ash)" }}
-          >
-            <Icon name="x" size={16} />
-          </button>
         </div>
+
+        {/* Workspace Switcher Card */}
+        <div className="sidebar-workspace-card border border-[#ededed] rounded-[8px] bg-white p-2 flex items-center justify-between shadow-subtle hover:border-[#cbcbcb] transition-colors mb-3 relative">
+          <button
+            onClick={() => setIsWorkspaceDropdownOpen(!isWorkspaceDropdownOpen)}
+            className="flex items-center gap-2 w-full text-left focus:outline-none bg-transparent border-none cursor-pointer"
+            style={{ background: "none", border: "none", display: "flex", alignItems: "center", gap: "8px", width: "100%", padding: 0 }}
+          >
+            <div className="w-6 h-6 rounded bg-[#262626] flex items-center justify-center text-white text-xs font-black shrink-0 shadow-sm">
+              {activeWorkspace === "personal" ? "K" : "A"}
+            </div>
+            <div className="flex flex-col min-w-0 text-left">
+              <span className="text-xs font-extrabold text-[#262626] leading-tight truncate">
+                {activeWorkspace === "personal" ? "Mi Workspace" : "Acme Corp"}
+              </span>
+              <span className="text-[10px] text-[#686868] mt-0.5 leading-none truncate">
+                {workspaceName}
+              </span>
+            </div>
+            <Lucide.ChevronsUpDown size={12} className="text-[#929292] shrink-0 ml-auto" />
+          </button>
+
+          {isWorkspaceDropdownOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-45" 
+                style={{ zIndex: 9998 }}
+                onClick={() => setIsWorkspaceDropdownOpen(false)}
+              />
+              <div 
+                className="absolute left-0 right-0 mt-1 w-full bg-white border border-neutral-200 rounded-md shadow-lg py-1.5"
+                style={{ borderColor: "var(--color-soft-mist)", boxShadow: "var(--shadow-subtle)", zIndex: 9999, top: "100%" }}
+              >
+                <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+                  Workspaces
+                </div>
+                <button
+                  onClick={() => {
+                    setActiveWorkspace("personal");
+                    setActiveTab("dashboard");
+                    setIsWorkspaceDropdownOpen(false);
+                  }}
+                  className={`flex items-center justify-between w-full text-left px-3 py-2 text-xs hover:bg-neutral-50 transition-colors ${activeWorkspace === "personal" ? "font-semibold text-neutral-900" : "text-neutral-600"}`}
+                  style={{ background: "none", border: "none", cursor: "pointer" }}
+                >
+                  <span>Mi Workspace</span>
+                  {activeWorkspace === "personal" && <Lucide.Check size={12} className="text-neutral-900" />}
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveWorkspace("acme");
+                    setActiveTab("dashboard");
+                    setIsWorkspaceDropdownOpen(false);
+                  }}
+                  className={`flex items-center justify-between w-full text-left px-3 py-2 text-xs hover:bg-neutral-50 transition-colors ${activeWorkspace === "acme" ? "font-semibold text-neutral-900" : "text-neutral-600"}`}
+                  style={{ background: "none", border: "none", cursor: "pointer" }}
+                >
+                  <span>Acme Corp</span>
+                  {activeWorkspace === "acme" && <Lucide.Check size={12} className="text-neutral-900" />}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Search Input (Matches Quno Sidebar style) */}
+        <div className="relative mb-3 flex items-center">
+          <Lucide.Search className="absolute left-2.5 text-[#929292] pointer-events-none" size={13} style={{ position: "absolute", left: "10px" }} />
+          <input 
+            type="text" 
+            placeholder="Search here" 
+            className="w-full bg-[#fbfbfb] border border-[#ededed] rounded-[4px] pl-8 pr-7 py-1.5 text-xs text-[#262626] focus:outline-none focus:border-[#262626] placeholder-[#929292]/60 font-sans"
+            style={{ width: "100%" }}
+            disabled
+          />
+          <span className="absolute right-2.5 text-[9px] font-medium text-[#929292] border border-[#ededed] bg-white rounded px-1.5 py-0.5 leading-none font-mono" style={{ position: "absolute", right: "10px" }}>/</span>
+        </div>
+
         <div className="sidebar-divider" />
 
         {/* 03-ui-architecture.md Layout links */}
@@ -1647,9 +1666,10 @@ export default function SaaSApp() {
           MAIN WORKSPACE
           ============================================================ */}
       <main className="main">
-        {/* Topbar with breadcrumb & actions */}
-        <header className="topbar">
-          <div className="breadcrumb" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <div className="workspace-panel">
+          {/* Topbar with breadcrumb & actions */}
+          <header className="topbar">
+          <div className="breadcrumb" style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button 
               className="mobile-menu-toggle" 
               onClick={() => {
@@ -1664,10 +1684,34 @@ export default function SaaSApp() {
             >
               <Icon name="menu" size={16} style={{ color: 'var(--color-ink)' }} />
             </button>
+            
+            {/* Bordered Navigation Buttons */}
+            <div className="hidden md:flex items-center" style={{ display: "flex", alignItems: "center", border: "1px solid var(--color-soft-mist)", borderRadius: "var(--radius-buttons)", backgroundColor: "var(--color-pure-paper)", overflow: "hidden" }}>
+              <button 
+                onClick={() => window.history.back()}
+                className="hover:bg-[#fafafa] flex items-center justify-center"
+                style={{ background: "none", border: "none", borderRight: "1px solid var(--color-soft-mist)", padding: "3px 5px", cursor: "pointer", color: "var(--color-slate)" }}
+                title="Atrás"
+              >
+                <Lucide.ChevronLeft size={12} />
+              </button>
+              <button 
+                onClick={() => window.history.forward()}
+                className="hover:bg-[#fafafa] flex items-center justify-center"
+                style={{ background: "none", border: "none", padding: "3px 5px", cursor: "pointer", color: "var(--color-slate)" }}
+                title="Adelante"
+              >
+                <Lucide.ChevronRight size={12} />
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="hidden md:block" style={{ height: "14px", width: "1px", backgroundColor: "var(--color-soft-mist)", margin: "0 2px" }} />
+
             <span>Workspaces</span> 
-            <Icon name="chevron-right" style={{ width: 10, height: 10, color: 'var(--color-ash)' }} /> 
+            <Lucide.ChevronRight size={10} style={{ color: 'var(--color-fog)' }} /> 
             <span>{workspaceName}</span> 
-            <Icon name="chevron-right" style={{ width: 10, height: 10, color: 'var(--color-ash)' }} /> 
+            <Lucide.ChevronRight size={10} style={{ color: 'var(--color-fog)' }} /> 
             <b style={{ textTransform: "capitalize" }}>{activeTab.replace("-", " ")}</b>
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
@@ -2972,6 +3016,7 @@ export default function SaaSApp() {
           </div>
 
         </div>
+        </div> {/* workspace-panel */}
       </main>
 
       {/* ============================================================
