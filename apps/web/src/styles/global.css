@@ -330,3 +330,10 @@ body.login-active #login-right {
     padding: 0.65rem !important;
   }
 }
+
+/* Hide footer when mobile menu is active to prevent animation overlap */
+body.mobile-menu-active [transition\:name="footer"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.15s ease !important;
+}

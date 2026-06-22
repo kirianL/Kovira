@@ -317,6 +317,7 @@ const { title, activeTab } = Astro.props;
           if (menu) {
             menu.classList.remove('translate-x-full', 'pointer-events-none');
             menu.classList.add('translate-x-0', 'pointer-events-auto');
+            document.body.classList.add('mobile-menu-active');
           }
           return;
         }
@@ -328,6 +329,7 @@ const { title, activeTab } = Astro.props;
           if (menu) {
             menu.classList.remove('translate-x-0', 'pointer-events-auto');
             menu.classList.add('translate-x-full', 'pointer-events-none');
+            document.body.classList.remove('mobile-menu-active');
           }
           if (isOverlayInteractive && target.closest('.open-login-btn')) {
             // Allow event to continue propagating so it triggers the open-login-btn handler
