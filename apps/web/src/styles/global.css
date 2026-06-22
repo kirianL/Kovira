@@ -240,6 +240,10 @@ body.login-active #login-right {
   }
 }
 
+#mobile-menu-overlay {
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
 .animate-spin-custom {
   animation: spin 0.8s linear infinite;
 }

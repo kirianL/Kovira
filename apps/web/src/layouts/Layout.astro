@@ -86,7 +86,7 @@ const { title, activeTab } = Astro.props;
     </div>
   </div>
 
-  <div id="mobile-menu-overlay" class="fixed inset-0 bg-[#090a16] z-[60] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-6 pointer-events-none">
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-[#090a16] z-[60] transform translate-x-full flex flex-col p-6 pointer-events-none">
     <div class="flex items-center justify-between mb-8">
       <a href="/" class="flex items-center gap-2.5 text-white">
         <svg class="h-6 w-auto flex-shrink-0" viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -322,15 +322,15 @@ const { title, activeTab } = Astro.props;
         }
 
         const closeMenuBtn = target.closest('#close-mobile-menu-btn');
-        const isOverlayLink = target.closest('#mobile-menu-overlay a');
-        if (closeMenuBtn || isOverlayLink) {
+        const isOverlayInteractive = target.closest('#mobile-menu-overlay a, #mobile-menu-overlay button');
+        if (closeMenuBtn || isOverlayInteractive) {
           const menu = document.getElementById('mobile-menu-overlay');
           if (menu) {
             menu.classList.remove('translate-x-0', 'pointer-events-auto');
             menu.classList.add('translate-x-full', 'pointer-events-none');
           }
-          if (isOverlayLink && target.closest('.open-login-btn')) {
-            // Wait for menu transition, then open auth
+          if (isOverlayInteractive && target.closest('.open-login-btn')) {
+            // Allow event to continue propagating so it triggers the open-login-btn handler
           } else {
             return;
           }
