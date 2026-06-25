@@ -410,11 +410,16 @@ const { title, activeTab } = Astro.props;
           const platform = span ? span.textContent : 'social provider';
           triggerLoadingRedirect(`Connecting to ${platform.split('with ')[1] || platform}...`);
           
-          setTimeout(() => {
-            authClient.signIn.email({
-              email: `${platform.split('with ')[1] || 'social'}.user@kovira.dev`,
-              callbackURL: '/app'
-            });
+          setTimeout(async () => {
+            try {
+              await authClient.signIn.email({
+                email: `${platform.split('with ')[1] || 'social'}.user@kovira.dev`,
+                password: "password123",
+                callbackURL: '/app'
+              });
+            } catch (err) {
+              console.error("Social login error:", err);
+            }
           }, 1400);
           return;
         }
@@ -435,11 +440,37 @@ const { title, activeTab } = Astro.props;
 
           triggerLoadingRedirect(redirectText);
 
-          setTimeout(() => {
-            authClient.signIn.email({
-              email,
-              callbackURL: '/app'
-            });
+          setTimeout(async () => {
+            try {
+              let res;
+              if (isSignup) {
+                res = await authClient.signUp.email({
+                  email,
+                  password: "password123",
+                  name: email.split('@')[0]
+                });
+              } else {
+                res = await authClient.signIn.email({
+                  email,
+                  password: "password123"
+                });
+              }
+
+              if (res && res.data) {
+                localStorage.setItem("better-auth.session", JSON.stringify(res.data));
+                const targetUrl = window.location.hostname === "localhost" ? "http://localhost:3000/app" : "/app";
+                window.location.href = targetUrl;
+              } else if (res && res.error) {
+                alert(res.error.message || "Authentication failed. Please try again.");
+                const loadingOverlay = document.getElementById('auth-loading-overlay');
+                if (loadingOverlay) loadingOverlay.classList.add('hidden');
+              }
+            } catch (err: any) {
+              console.error("Auth error:", err);
+              alert(err.message || "Authentication error occurred.");
+              const loadingOverlay = document.getElementById('auth-loading-overlay');
+              if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            }
           }, 1400);
         }
       });
@@ -508,48 +539,69 @@ const { title, activeTab } = Astro.props;
       const globalWindow = window as any;
       if (globalWindow.koviraInitialized) {
         const desktopContainer = document.getElementById('desktop-auth-container');
-        if (desktopContainer) {
-          const sessionData = localStorage.getItem("better-auth.session");
-          if (sessionData) {
-            try {
-              desktopContainer.innerHTML = `
-                <a href="/app" class="bg-white text-ink px-5 py-2 rounded-buttons text-sm font-semibold btn-primary-shadow transition-all duration-200 hover:bg-soft-mist hover:-translate-y-[1px] cursor-pointer">Go to App</a>
-                <button id="nav-logout-btn" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer bg-transparent border-none">Sign Out</button>
-              `;
-              const logoutBtn = document.getElementById('nav-logout-btn');
-              if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                  e.preventDefault();
-                  localStorage.removeItem("better-auth.session");
-                  document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                  window.location.href = "/";
-                });
-              }
-            } catch {}
-          }
-        }
-        
         const mobileAuthContainer = document.querySelector('#mobile-menu-overlay .mt-auto');
-        if (mobileAuthContainer) {
-          const sessionData = localStorage.getItem("better-auth.session");
-          if (sessionData) {
-            try {
-              mobileAuthContainer.innerHTML = `
-                <a href="/app" class="w-full text-center bg-white text-ink py-3 rounded-buttons text-sm font-semibold cursor-pointer hover:bg-white/90 transition-colors shadow-lg block">Go to App</a>
-                <button id="mobile-logout-btn" class="w-full text-center text-white py-3 rounded-buttons text-sm font-semibold border border-white/10 hover:border-white/20 hover:bg-white/5 cursor-pointer bg-transparent transition-all mt-2 animate-fade-in block">Sign Out</button>
-              `;
-              const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
-              if (mobileLogoutBtn) {
-                mobileLogoutBtn.addEventListener('click', (e) => {
-                  e.preventDefault();
-                  localStorage.removeItem("better-auth.session");
-                  document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                  window.location.href = "/";
-                });
-              }
-            } catch {}
+
+        const updateAuthUI = (sessionData: any) => {
+          if (desktopContainer) {
+            desktopContainer.innerHTML = `
+              <a href="/app" class="bg-white text-ink px-5 py-2 rounded-buttons text-sm font-semibold btn-primary-shadow transition-all duration-200 hover:bg-soft-mist hover:-translate-y-[1px] cursor-pointer">Go to App</a>
+              <button id="nav-logout-btn" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer bg-transparent border-none">Sign Out</button>
+            `;
+            const logoutBtn = document.getElementById('nav-logout-btn');
+            if (logoutBtn) {
+              logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                  await authClient.signOut();
+                } catch (err) {}
+                localStorage.removeItem("better-auth.session");
+                document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                window.location.href = "/";
+              });
+            }
           }
+
+          if (mobileAuthContainer) {
+            mobileAuthContainer.innerHTML = `
+              <a href="/app" class="w-full text-center bg-white text-ink py-3 rounded-buttons text-sm font-semibold cursor-pointer hover:bg-white/90 transition-colors shadow-lg block">Go to App</a>
+              <button id="mobile-logout-btn" class="w-full text-center text-white py-3 rounded-buttons text-sm font-semibold border border-white/10 hover:border-white/20 hover:bg-white/5 cursor-pointer bg-transparent transition-all mt-2 animate-fade-in block">Sign Out</button>
+            `;
+            const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+            if (mobileLogoutBtn) {
+              mobileLogoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                  await authClient.signOut();
+                } catch (err) {}
+                localStorage.removeItem("better-auth.session");
+                document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                window.location.href = "/";
+              });
+            }
+          }
+        };
+
+        const cached = localStorage.getItem("better-auth.session");
+        if (cached) {
+          try {
+            updateAuthUI(JSON.parse(cached));
+          } catch {}
         }
+
+        // Verify session asynchronously with server
+        authClient.getSession().then(({ data }) => {
+          if (data) {
+            localStorage.setItem("better-auth.session", JSON.stringify(data));
+            updateAuthUI(data);
+          } else {
+            localStorage.removeItem("better-auth.session");
+            if (cached) {
+              window.location.reload();
+            }
+          }
+        }).catch(() => {
+          // Keep cached UI if request fails due to temporary network issues
+        });
 
         // Handle redirect queries (e.g. ?open_signin=true)
         const params = new URLSearchParams(window.location.search);

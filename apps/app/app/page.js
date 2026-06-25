@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import * as Lucide from "lucide-react";
+import { authClient } from "../lib/auth-client";
 import {
   DndContext,
   closestCenter,
@@ -442,20 +443,20 @@ export default function SaaSApp() {
 
   // 1. Initial mounting check to avoid hydration issues and verify session
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const sessionData = localStorage.getItem("better-auth.session");
-      if (!sessionData) {
-        window.location.href = "/?open_signin=true";
-      } else {
-        try {
-          const parsed = JSON.parse(sessionData);
-          setSession(parsed);
-          setIsMounted(true);
-        } catch (e) {
+    const checkSession = async () => {
+      try {
+        const { data, error } = await authClient.getSession();
+        if (error || !data) {
           window.location.href = "/?open_signin=true";
+        } else {
+          setSession(data);
+          setIsMounted(true);
         }
+      } catch (e) {
+        window.location.href = "/?open_signin=true";
       }
-    }
+    };
+    checkSession();
   }, []);
 
   // Listen for Escape key to close mobile sidebar
@@ -1496,9 +1497,12 @@ export default function SaaSApp() {
     alert("Configuraciones del workspace guardadas correctamente.");
   };
 
-  const handleSignOut = () => {
-    localStorage.removeItem("better-auth.session");
-    document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut();
+    } catch (e) {
+      console.error("Sign out error:", e);
+    }
     window.location.href = "/";
   };
 
