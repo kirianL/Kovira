@@ -10,6 +10,20 @@ const db = new DatabaseSync(dbPath);
 
 export const auth = betterAuth({
   database: db,
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID || "github_placeholder_id",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "github_placeholder_secret"
+    },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID || "google_placeholder_id",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "google_placeholder_secret"
+    },
+    linkedin: {
+      clientId: process.env.LINKEDIN_CLIENT_ID || "linkedin_placeholder_id",
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || "linkedin_placeholder_secret"
+    }
+  },
   plugins: [
     dash(),
     sentinel()
