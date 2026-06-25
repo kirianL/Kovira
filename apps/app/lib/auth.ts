@@ -4,8 +4,10 @@ import { DatabaseSync } from "node:sqlite";
 import { getSchema } from "better-auth/db";
 import path from "path";
 
-// Initialize SQLite database in the current working directory
-const dbPath = path.join(process.cwd(), "database.sqlite");
+// Initialize SQLite database (using /tmp on Vercel due to read-only filesystem)
+const dbPath = process.env.VERCEL
+  ? "/tmp/database.sqlite"
+  : path.join(process.cwd(), "database.sqlite");
 const db = new DatabaseSync(dbPath);
 
 const authOptions = {
