@@ -10,6 +10,17 @@ const db = new DatabaseSync(dbPath);
 
 const authOptions = {
   database: db,
+  trustedOrigins: [
+    "https://kovira-web.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:4321"
+  ],
+  allowedHosts: [
+    "kovira-web.vercel.app",
+    "kovira-app.vercel.app",
+    "localhost:3000",
+    "localhost:4321"
+  ],
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID || "github_placeholder_id",
