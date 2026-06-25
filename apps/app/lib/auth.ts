@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
-import { dash } from "@better-auth/infra";
+import { dash, sentinel } from "@better-auth/infra";
 
 export const auth = betterAuth({
   plugins: [
-    dash()
+    dash(),
+    sentinel()
   ]
 });
