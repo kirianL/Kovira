@@ -9,7 +9,7 @@ interface Props {
 
 const { title, activeTab } = Astro.props;
 ---
-<html lang="en" class="overflow-hidden h-dvh w-full bg-[#090a16]">
+<html lang="en" class="overflow-hidden h-dvh w-full bg-[#090a16] max-[768px]:overflow-y-auto max-[768px]:h-auto">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -19,9 +19,9 @@ const { title, activeTab } = Astro.props;
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <ClientRouter />
 </head>
-<body class="overflow-hidden h-dvh w-full text-white antialiased tracking-[-0.025em] flex flex-col">
+<body class="overflow-hidden h-dvh w-full text-white antialiased tracking-[-0.025em] flex flex-col max-[768px]:overflow-y-auto max-[768px]:h-auto">
 
-  <div id="landing-view" transition:name="landing-view" transition:animate="none" class="relative w-full h-dvh overflow-hidden flex flex-col justify-between bg-hero-pattern bg-cover bg-center bg-no-repeat">
+  <div id="landing-view" transition:name="landing-view" transition:animate="none" class="relative w-full h-dvh overflow-hidden flex flex-col justify-between bg-hero-pattern bg-cover bg-center bg-no-repeat max-[768px]:h-auto max-[768px]:min-h-dvh max-[768px]:overflow-visible max-[768px]:justify-start">
     
     <nav transition:name="navbar" transition:animate="none" class="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center px-12 h-16 max-[768px]:px-6 max-[768px]:grid-cols-[1fr_auto]">
       <a href="/" class="flex items-center gap-2.5 justify-self-start text-white hover:opacity-90 transition-opacity cursor-pointer">
@@ -39,7 +39,7 @@ const { title, activeTab } = Astro.props;
       </ul>
 
       <div class="flex items-center gap-4 justify-self-end">
-        <div class="flex items-center gap-4 max-[768px]:hidden">
+        <div id="desktop-auth-container" class="flex items-center gap-4 max-[768px]:hidden">
           <button id="nav-signin-btn" class="open-login-btn text-white/75 text-sm font-medium transition-colors duration-200 hover:text-white bg-transparent border-none cursor-pointer">Sign In</button>
           <button id="nav-getstarted-btn" class="open-login-btn bg-ink text-white px-5 py-2 rounded-buttons text-sm font-medium tracking-[-0.025em] border border-white/15 btn-primary-shadow transition-all duration-200 hover:bg-charcoal hover:-translate-y-[1px] cursor-pointer">Get Started</button>
         </div>
@@ -66,22 +66,39 @@ const { title, activeTab } = Astro.props;
       <path d="M 220 550 Q 720 350 1220 550" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-dasharray="4 8" />
     </svg>
 
-    <main transition:name="main-content" class="flex-1 flex flex-col w-full min-h-0 relative z-5 overflow-hidden pb-14">
+    <main transition:name="main-content" class="flex-1 flex flex-col w-full min-h-0 relative z-5 overflow-hidden pb-14 max-[768px]:h-auto max-[768px]:min-h-0 max-[768px]:overflow-visible max-[768px]:pb-6">
       <slot />
     </main>
 
-    <div transition:name="footer" transition:animate="none" class="absolute bottom-0 left-0 right-0 w-full flex flex-col items-center gap-1 pb-4 z-10 pointer-events-none max-[768px]:pb-3">
-      <div class="flex flex-col items-center gap-1 pointer-events-auto cursor-default">
-        <div class="text-[11px] text-black/60 font-medium tracking-wider text-center">
+    <div transition:name="footer" transition:animate="none" class="absolute bottom-0 left-0 right-0 w-full flex flex-col items-center gap-1.5 pb-4 z-10 pointer-events-none max-[768px]:relative max-[768px]:bottom-auto max-[768px]:left-auto max-[768px]:right-auto max-[768px]:mt-auto max-[768px]:pointer-events-auto max-[768px]:pb-6 max-[768px]:pt-4 max-[768px]:px-6">
+      <div class="flex flex-col items-center gap-1.5 pointer-events-auto cursor-default w-full">
+        <!-- Desktop Footer Layout -->
+        <div class="text-[11px] text-white/40 font-medium tracking-wider text-center max-[768px]:hidden">
           <span>© 2026 Kovira. All rights reserved.</span>
-          <a href="/help" class="mx-2 transition-colors duration-200 hover:text-black">Help</a>
-          <a href="/terms" class="mx-2 transition-colors duration-200 hover:text-black">Terms</a>
-          <a href="/privacy" class="mx-2 transition-colors duration-200 hover:text-black">Privacy</a>
-          <a href="/billing" class="mx-2 transition-colors duration-200 hover:text-black">Billing</a>
-          <span class="mx-1 text-black/20">|</span>
-          <a href="/app" class="mx-2 transition-colors duration-200 hover:text-black">Platform</a>
+          <a href="/help" class="mx-2 transition-colors duration-200 hover:text-white">Help</a>
+          <a href="/terms" class="mx-2 transition-colors duration-200 hover:text-white">Terms</a>
+          <a href="/privacy" class="mx-2 transition-colors duration-200 hover:text-white">Privacy</a>
+          <a href="/billing" class="mx-2 transition-colors duration-200 hover:text-white">Billing</a>
+          <span class="mx-1 text-white/10">|</span>
+          <a href="/app" class="mx-2 transition-colors duration-200 hover:text-white">Platform</a>
         </div>
-        <div class="text-[11px] text-black/60 font-medium tracking-wide text-center">Developed by Kirian with <span class="text-black/80">♥</span></div>
+        <!-- Mobile Footer Layout (extremely clean and tap-friendly) -->
+        <div class="hidden max-[768px]:flex flex-col items-center gap-3 w-full text-center">
+          <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12px] text-white/60 font-semibold">
+            <a href="/help" class="transition-colors duration-200 hover:text-white active:opacity-75">Help</a>
+            <a href="/terms" class="transition-colors duration-200 hover:text-white active:opacity-75">Terms</a>
+            <a href="/privacy" class="transition-colors duration-200 hover:text-white active:opacity-75">Privacy</a>
+            <a href="/billing" class="transition-colors duration-200 hover:text-white active:opacity-75">Billing</a>
+            <a href="/app" class="transition-colors duration-200 hover:text-white active:opacity-75">Platform</a>
+          </div>
+          <div class="text-[10px] text-white/40 font-medium tracking-wide">
+            © 2026 Kovira. All rights reserved.
+          </div>
+        </div>
+        <!-- Developed By Line -->
+        <div class="text-[10px] text-white/40 font-medium tracking-wide text-center">
+          Developed by Kirian with <span class="text-rose-500 inline-block animate-pulse duration-1000">♥</span>
+        </div>
       </div>
     </div>
   </div>
@@ -102,16 +119,16 @@ const { title, activeTab } = Astro.props;
     </div>
     
     <ul class="flex flex-col gap-6 text-lg font-medium text-white/80">
-      <li><a href="/forms" class="hover:text-white transition-colors block py-2.5 border-b border-white/10">Forms</a></li>
-      <li><a href="/submissions" class="hover:text-white transition-colors block py-2.5 border-b border-white/10">Submissions</a></li>
-      <li><a href="/pricing" class="hover:text-white transition-colors block py-2.5 border-b border-white/10">Pricing</a></li>
-      <li><a href="/analytics" class="hover:text-white transition-colors block py-2.5 border-b border-white/10">Analytics</a></li>
-      <li><a href="/billing" class="hover:text-white transition-colors block py-2.5 border-b border-white/10">Billing</a></li>
+      <li><a href="/forms" class={`hover:text-white transition-colors block py-2.5 border-b border-white/10 ${activeTab === 'forms' ? 'text-white font-bold pl-2 border-l-2 border-l-white border-b-white/20' : 'text-white/70'}`}>Forms</a></li>
+      <li><a href="/submissions" class={`hover:text-white transition-colors block py-2.5 border-b border-white/10 ${activeTab === 'submissions' ? 'text-white font-bold pl-2 border-l-2 border-l-white border-b-white/20' : 'text-white/70'}`}>Submissions</a></li>
+      <li><a href="/pricing" class={`hover:text-white transition-colors block py-2.5 border-b border-white/10 ${activeTab === 'pricing' ? 'text-white font-bold pl-2 border-l-2 border-l-white border-b-white/20' : 'text-white/70'}`}>Pricing</a></li>
+      <li><a href="/analytics" class={`hover:text-white transition-colors block py-2.5 border-b border-white/10 ${activeTab === 'analytics' ? 'text-white font-bold pl-2 border-l-2 border-l-white border-b-white/20' : 'text-white/70'}`}>Analytics</a></li>
+      <li><a href="/billing" class={`hover:text-white transition-colors block py-2.5 border-b border-white/10 ${activeTab === 'billing' ? 'text-white font-bold pl-2 border-l-2 border-l-white border-b-white/20' : 'text-white/70'}`}>Billing</a></li>
     </ul>
 
     <div class="mt-auto flex flex-col gap-4 pb-8">
-      <button class="open-login-btn w-full text-center text-white/70 py-3 rounded-buttons text-sm font-medium border border-white/10 cursor-pointer bg-transparent">Sign In</button>
-      <button class="open-login-btn w-full text-center bg-ink text-white py-3 rounded-buttons text-sm font-medium border border-white/15 cursor-pointer">Get Started</button>
+      <button class="open-login-btn w-full text-center text-white py-3 rounded-buttons text-sm font-semibold border border-white/10 hover:border-white/20 hover:bg-white/5 cursor-pointer bg-transparent transition-all">Sign In</button>
+      <button class="open-login-btn w-full text-center bg-white text-ink py-3 rounded-buttons text-sm font-semibold cursor-pointer hover:bg-white/90 transition-colors shadow-lg">Get Started</button>
     </div>
   </div>
 
@@ -230,6 +247,7 @@ const { title, activeTab } = Astro.props;
   </div>
 
   <script>
+    import { authClient } from '../utils/auth';
     import SplitType from 'split-type';
     import { animate, stagger } from 'motion';
 
@@ -242,9 +260,6 @@ const { title, activeTab } = Astro.props;
         const loadingText = document.getElementById('loading-text');
         if (loadingText) loadingText.textContent = actionText;
         if (loadingOverlay) loadingOverlay.classList.remove('hidden');
-        setTimeout(() => {
-          window.location.href = '/app';
-        }, 1400);
       };
 
       const selectSignUpForm = () => {
@@ -294,6 +309,10 @@ const { title, activeTab } = Astro.props;
         const openLoginBtn = target.closest('.open-login-btn');
         if (openLoginBtn) {
           e.stopPropagation();
+          if (localStorage.getItem("better-auth.session")) {
+            window.location.href = "/app";
+            return;
+          }
           const id = openLoginBtn.id;
           const text = openLoginBtn.textContent ? openLoginBtn.textContent.trim().toLowerCase() : '';
 
@@ -327,6 +346,20 @@ const { title, activeTab } = Astro.props;
             menu.classList.remove('translate-x-full', 'pointer-events-none');
             menu.classList.add('translate-x-0', 'pointer-events-auto');
             document.body.classList.add('mobile-menu-active');
+
+            // Stagger animation for links & buttons
+            const menuElements = menu.querySelectorAll('ul li, .mt-auto button, .mt-auto a');
+            if (menuElements.length > 0) {
+              animate(
+                Array.from(menuElements),
+                { opacity: [0, 1], x: [24, 0] },
+                { 
+                  duration: 0.38, 
+                  delay: stagger(0.04, { startDelay: 0.08 }), 
+                  easing: [0.16, 1, 0.3, 1] 
+                }
+              );
+            }
           }
           return;
         }
@@ -339,6 +372,13 @@ const { title, activeTab } = Astro.props;
             menu.classList.remove('translate-x-0', 'pointer-events-auto');
             menu.classList.add('translate-x-full', 'pointer-events-none');
             document.body.classList.remove('mobile-menu-active');
+
+            // Reset elements properties immediately on close so they're ready for next open
+            const menuElements = menu.querySelectorAll('ul li, .mt-auto button, .mt-auto a');
+            menuElements.forEach(el => {
+              (el as HTMLElement).style.opacity = '0';
+              (el as HTMLElement).style.transform = 'translateX(24px)';
+            });
           }
           if (isOverlayInteractive && target.closest('.open-login-btn')) {
             // Allow event to continue propagating so it triggers the open-login-btn handler
@@ -369,6 +409,13 @@ const { title, activeTab } = Astro.props;
           const span = socialBtn.querySelector('span');
           const platform = span ? span.textContent : 'social provider';
           triggerLoadingRedirect(`Connecting to ${platform.split('with ')[1] || platform}...`);
+          
+          setTimeout(() => {
+            authClient.signIn.email({
+              email: `${platform.split('with ')[1] || 'social'}.user@kovira.dev`,
+              callbackURL: '/app'
+            });
+          }, 1400);
           return;
         }
       });
@@ -379,7 +426,21 @@ const { title, activeTab } = Astro.props;
         const emailForm = target.closest('.auth-email-form');
         if (emailForm) {
           e.preventDefault();
-          triggerLoadingRedirect('Signing you in...');
+          const emailInput = emailForm.querySelector('input[type="email"]') as HTMLInputElement;
+          const email = emailInput ? emailInput.value : '';
+
+          const signupView = document.getElementById('auth-signup-view');
+          const isSignup = signupView?.classList.contains('auth-view-active');
+          const redirectText = isSignup ? 'Creating your account...' : 'Signing you in...';
+
+          triggerLoadingRedirect(redirectText);
+
+          setTimeout(() => {
+            authClient.signIn.email({
+              email,
+              callbackURL: '/app'
+            });
+          }, 1400);
         }
       });
     }
@@ -428,6 +489,86 @@ const { title, activeTab } = Astro.props;
 
     document.addEventListener('astro:page-load', () => {
       runTextReveal();
+
+      // Ensure mobile menu is closed on transition and reset menu links properties
+      const menu = document.getElementById('mobile-menu-overlay');
+      if (menu) {
+        menu.classList.remove('translate-x-0', 'pointer-events-auto');
+        menu.classList.add('translate-x-full', 'pointer-events-none');
+        document.body.classList.remove('mobile-menu-active');
+
+        const menuElements = menu.querySelectorAll('ul li, .mt-auto button, .mt-auto a');
+        menuElements.forEach(el => {
+          (el as HTMLElement).style.opacity = '0';
+          (el as HTMLElement).style.transform = 'translateX(24px)';
+        });
+      }
+
+      // Check session state on load and toggle buttons
+      const globalWindow = window as any;
+      if (globalWindow.koviraInitialized) {
+        const desktopContainer = document.getElementById('desktop-auth-container');
+        if (desktopContainer) {
+          const sessionData = localStorage.getItem("better-auth.session");
+          if (sessionData) {
+            try {
+              desktopContainer.innerHTML = `
+                <a href="/app" class="bg-white text-ink px-5 py-2 rounded-buttons text-sm font-semibold btn-primary-shadow transition-all duration-200 hover:bg-soft-mist hover:-translate-y-[1px] cursor-pointer">Go to App</a>
+                <button id="nav-logout-btn" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer bg-transparent border-none">Sign Out</button>
+              `;
+              const logoutBtn = document.getElementById('nav-logout-btn');
+              if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  localStorage.removeItem("better-auth.session");
+                  document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                  window.location.href = "/";
+                });
+              }
+            } catch {}
+          }
+        }
+        
+        const mobileAuthContainer = document.querySelector('#mobile-menu-overlay .mt-auto');
+        if (mobileAuthContainer) {
+          const sessionData = localStorage.getItem("better-auth.session");
+          if (sessionData) {
+            try {
+              mobileAuthContainer.innerHTML = `
+                <a href="/app" class="w-full text-center bg-white text-ink py-3 rounded-buttons text-sm font-semibold cursor-pointer hover:bg-white/90 transition-colors shadow-lg block">Go to App</a>
+                <button id="mobile-logout-btn" class="w-full text-center text-white py-3 rounded-buttons text-sm font-semibold border border-white/10 hover:border-white/20 hover:bg-white/5 cursor-pointer bg-transparent transition-all mt-2 animate-fade-in block">Sign Out</button>
+              `;
+              const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+              if (mobileLogoutBtn) {
+                mobileLogoutBtn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  localStorage.removeItem("better-auth.session");
+                  document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                  window.location.href = "/";
+                });
+              }
+            } catch {}
+          }
+        }
+
+        // Handle redirect queries (e.g. ?open_signin=true)
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('open_signin')) {
+          if (localStorage.getItem("better-auth.session")) {
+            window.location.href = "/app";
+          } else {
+            const signupView = document.getElementById('auth-signup-view');
+            const loginView = document.getElementById('auth-login-view');
+            if (signupView && loginView) {
+              signupView.classList.remove('auth-view-active');
+              signupView.classList.add('auth-view-left-exit');
+              loginView.classList.remove('auth-view-right-exit');
+              loginView.classList.add('auth-view-active');
+            }
+            document.body.classList.add('login-active');
+          }
+        }
+      }
     });
   </script>
 

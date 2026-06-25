@@ -57,7 +57,8 @@ function Icon({ name, className = "", style = {}, size = 14 }) {
     check: Lucide.Check,
     "corner-down-left": Lucide.CornerDownLeft,
     "chevron-down": Lucide.ChevronDown,
-    "alert-circle": Lucide.AlertCircle
+    "alert-circle": Lucide.AlertCircle,
+    "log-out": Lucide.LogOut
   };
 
   const LucideIcon = mapping[name] || Lucide.HelpCircle;
@@ -293,6 +294,7 @@ const getFieldLabel = (type) => {
 export default function SaaSApp() {
   // Navigation & Workspace State
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [session, setSession] = useState(null);
   const [activeWorkspace, setActiveWorkspace] = useState("personal");
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -438,9 +440,22 @@ export default function SaaSApp() {
     }
   };
 
-  // 1. Initial mounting check to avoid hydration issues
+  // 1. Initial mounting check to avoid hydration issues and verify session
   useEffect(() => {
-    setIsMounted(true);
+    if (typeof window !== "undefined") {
+      const sessionData = localStorage.getItem("better-auth.session");
+      if (!sessionData) {
+        window.location.href = "/?open_signin=true";
+      } else {
+        try {
+          const parsed = JSON.parse(sessionData);
+          setSession(parsed);
+          setIsMounted(true);
+        } catch (e) {
+          window.location.href = "/?open_signin=true";
+        }
+      }
+    }
   }, []);
 
   // Listen for Escape key to close mobile sidebar
@@ -1255,7 +1270,7 @@ export default function SaaSApp() {
 
     const newComment = {
       id: `com-${Date.now()}`,
-      author: "Kirian Luna",
+      author: session?.user?.name || "Kirian Luna",
       text: newCommentText,
       created_at: new Date().toISOString()
     };
@@ -1282,7 +1297,7 @@ export default function SaaSApp() {
     const newActivity = {
       id: `act-${Date.now()}`,
       action: "status_change",
-      user: "Kirian Luna",
+      user: session?.user?.name || "Kirian Luna",
       details: `Estado cambiado de ${oldStatus} a ${newStatus}`,
       created_at: new Date().toISOString()
     };
@@ -1481,6 +1496,12 @@ export default function SaaSApp() {
     alert("Configuraciones del workspace guardadas correctamente.");
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem("better-auth.session");
+    document.cookie = "better-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    window.location.href = "/";
+  };
+
   if (!isMounted) {
     return (
       <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#ECEAE3", fontFamily: "sans-serif" }}>
@@ -1652,12 +1673,43 @@ export default function SaaSApp() {
 
         {/* User profile card */}
         <div className="sidebar-bottom">
-          <div className="profile-card">
-            <div className="avatar">KL</div>
-            <div style={{ minWidth: 0 }}>
-              <div className="profile-name" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Kirian Luna</div>
-              <div className="profile-role" style={{ fontSize: 10 }}>Sorin Labs · Owner</div>
+          <div className="profile-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: "8px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: 1 }}>
+              <div className="avatar">
+                {session?.user?.name
+                  ? session.user.name.substring(0, 2).toUpperCase()
+                  : (session?.user?.email ? session.user.email.substring(0, 2).toUpperCase() : "KL")}
+              </div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div className="profile-name" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontWeight: 600 }}>
+                  {session?.user?.name || "Kirian Luna"}
+                </div>
+                <div className="profile-role" style={{ fontSize: 10, color: "var(--color-slate)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={session?.user?.email || "kirian@kovira.dev"}>
+                  {session?.user?.email || "Sorin Labs · Owner"}
+                </div>
+              </div>
             </div>
+            <button 
+              onClick={handleSignOut} 
+              className="btn-logout" 
+              title="Cerrar sesión"
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: "6px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "var(--radius-buttons)",
+                color: "var(--color-slate)",
+                transition: "color 0.2s, background-color 0.2s"
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = "#ef4444"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "var(--color-slate)"}
+            >
+              <Icon name="log-out" size={16} />
+            </button>
           </div>
         </div>
       </aside>

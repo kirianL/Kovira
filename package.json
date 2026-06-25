@@ -14,5 +14,9 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.19"
+  },
+  "dependencies": {
+    "@better-auth/infra": "^0.3.2",
+    "better-auth": "^1.6.20"
   }
 }
