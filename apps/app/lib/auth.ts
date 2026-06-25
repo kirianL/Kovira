@@ -8,7 +8,7 @@ import path from "path";
 const dbPath = path.join(process.cwd(), "database.sqlite");
 const db = new DatabaseSync(dbPath);
 
-export const auth = betterAuth({
+const authOptions = {
   database: db,
   socialProviders: {
     github: {
@@ -28,12 +28,14 @@ export const auth = betterAuth({
     dash(),
     sentinel()
   ]
-});
+};
+
+export const auth = betterAuth(authOptions);
 
 // Dynamically create tables from Better Auth schema if they don't exist
 function initDatabase() {
   try {
-    const schema = getSchema(auth);
+    const schema = getSchema(authOptions);
     const tables = Object.entries(schema).sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
     
     for (const [tableName, tableConfig] of tables) {
