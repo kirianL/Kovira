@@ -23,6 +23,7 @@ const authOptions = {
     "localhost:3000",
     "localhost:4321"
   ],
+  basePath: "/app/api/auth",
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID || "github_placeholder_id",
